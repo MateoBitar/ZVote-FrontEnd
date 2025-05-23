@@ -1,116 +1,48 @@
 package com.example.zvotefrontend.Forms;
 
+import com.example.zvotefrontend.Controllers.SignInController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class SignInForm {
 
+    private final SignInController controller = new SignInController();  // Connect to backend
+
     public Scene createSignInScene(Stage primaryStage) {
-        Stage signInStage = new Stage();
-        signInStage.setTitle("Sign Up/Log In - ZVote");
-        signInStage.setResizable(false);
+        VBox layout = new VBox(15);
+        layout.setPadding(new Insets(20));
+        layout.setAlignment(Pos.CENTER);
 
-        BorderPane layout = new BorderPane();
-        HBox form = new HBox();
-        form.setAlignment(Pos.CENTER);
+        Label title = new Label("Sign In");
+        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
-        // Sign-Up Section
-        VBox signInLayout = new VBox(15);
-        signInLayout.setPadding(new Insets(20));
-        signInLayout.setAlignment(Pos.TOP_LEFT);
-        signInLayout.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #C8F0FF; -fx-border-width: 3px;");
+        TextField usernameField = new TextField();
+        usernameField.setPromptText("Enter Username");
 
-        Label STitle = new Label("Sign Up");
-        STitle.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+        PasswordField passwordField = new PasswordField();
+        passwordField.setPromptText("Enter Password");
 
-        Label SUsernameLabel = new Label("Username:");
-        SUsernameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
-        TextField SUsernameField = new TextField();
-        SUsernameField.setPromptText("Enter your username");
-        SUsernameField.setPrefWidth(250);
+        Button loginButton = new Button("Login");
+        loginButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold;");
+        loginButton.setOnAction(e -> {
+            String username = usernameField.getText();
+            String password = passwordField.getText();
+            try {
+                String response = controller.login(username, password);
+                System.out.println("Login Response: " + response);  // Debugging log
+            } catch (Exception ex) {
+                System.out.println("Login failed: " + ex.getMessage());
+            }
+        });
 
-        Label SEmailLabel = new Label("Email:");
-        SEmailLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
-        TextField SEmailField = new TextField();
-        SEmailField.setPromptText("Enter your email");
-        SEmailField.setPrefWidth(250);
-
-        Label SPasswordLabel = new Label("Password:");
-        SPasswordLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
-        PasswordField SPasswordField = new PasswordField();
-        SPasswordField.setPromptText("Enter your password");
-        SPasswordField.setPrefWidth(250);
-
-        Label SPhoneLabel = new Label("Phone Number:");
-        SPhoneLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
-        HBox SPhoneBox = new HBox(10);
-        SPhoneBox.setAlignment(Pos.CENTER_LEFT);
-
-        ComboBox<String> countryCodeDropdown = new ComboBox<>();
-        countryCodeDropdown.getItems().addAll("+1 (USA)", "+961 (Lebanon)", "+81 (Japan)");
-        countryCodeDropdown.setValue("+961");
-        countryCodeDropdown.setPrefWidth(120);
-
-        TextField phoneField = new TextField();
-        phoneField.setPromptText("Phone Number");
-        phoneField.setPrefWidth(250);
-
-        SPhoneBox.getChildren().addAll(countryCodeDropdown, phoneField);
-
-        Button uploadPhotoButton = new Button("Upload Photo ID");
-        Button SSubmitButton = new Button("Submit");
-
-        signInLayout.getChildren().addAll(
-                STitle, SUsernameLabel, SUsernameField,
-                SEmailLabel, SEmailField,
-                SPasswordLabel, SPasswordField,
-                SPhoneLabel, SPhoneBox,
-                uploadPhotoButton, SSubmitButton
-        );
-
-        // Log-In Section
-        VBox loginLayout = new VBox(15);
-        loginLayout.setPadding(new Insets(20));
-        loginLayout.setAlignment(Pos.TOP_LEFT);
-        loginLayout.setStyle("-fx-background-color: #C8F0FF;");
-
-        Label LTitle = new Label("Log In");
-        LTitle.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
-
-        Label LUsernameLabel = new Label("Username:");
-        LUsernameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
-        TextField LUsernameField = new TextField();
-        LUsernameField.setPromptText("Enter your username");
-        LUsernameField.setPrefWidth(250);
-
-        Label LPasswordLabel = new Label("Password:");
-        LPasswordLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
-        PasswordField LPasswordField = new PasswordField();
-        LPasswordField.setPromptText("Enter your password");
-        LPasswordField.setPrefWidth(250);
-
-        Button LSubmitButton = new Button("Submit");
-
-        ImageView ballotImage = new ImageView(new Image(getClass().getResource("/images/Ballot Image.png").toExternalForm()));
-        ballotImage.setFitHeight(250);
-        ballotImage.setFitWidth(300);
-
-        HBox ballotWrapper = new HBox();
-        ballotWrapper.setAlignment(Pos.CENTER);
-        ballotWrapper.getChildren().add(ballotImage);
-
-        loginLayout.getChildren().addAll(LTitle, LUsernameLabel, LUsernameField, LPasswordLabel, LPasswordField, LSubmitButton, ballotWrapper);
-
-        form.getChildren().addAll(signInLayout, loginLayout);
-        layout.setCenter(form);
-
-        Scene scene = new Scene(layout, 800, 635);
-        return scene;
+        layout.getChildren().addAll(title, usernameField, passwordField, loginButton);
+        return new Scene(layout, 400, 300);
     }
 }

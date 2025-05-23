@@ -8,20 +8,23 @@ import java.net.http.HttpResponse;
 
 public class SignInController {
 
-    private static final String BASE_URL = "http://localhost:8080/api/auth";
+    private static String buildUrl(String endpoint) {
+        final String BASE_URL = "http://localhost:8080/api/auth/";
+        return BASE_URL + endpoint;
+    }
 
     public String login(String username, String password) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         String requestBody = "{\"username\": \"" + username + "\", \"password\": \"" + password + "\"}";
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/login"))
+                .uri(URI.create(buildUrl("login")))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return response.body(); // Return JSON response from backend
+        return response.body();
     }
 
     public String signUp(String username, String email, String password, String phone) throws IOException, InterruptedException {
@@ -29,12 +32,12 @@ public class SignInController {
         String requestBody = "{\"username\": \"" + username + "\", \"email\": \"" + email + "\", \"password\": \"" + password + "\", \"phone\": \"" + phone + "\"}";
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/signup"))
+                .uri(URI.create(buildUrl("signup")))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return response.body(); // Return JSON response from backend
+        return response.body();
     }
 }

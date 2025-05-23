@@ -1,97 +1,39 @@
 package com.example.zvotefrontend.Forms;
 
+import com.example.zvotefrontend.Controllers.AboutUsController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.stage.Screen;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class AboutUsForm {
 
+    private final AboutUsController controller = new AboutUsController();  // Connect to backend
+
     public Scene createAboutUsScene(Stage primaryStage) {
+        VBox layout = new VBox(20);
+        layout.setPadding(new Insets(20));
+        layout.setAlignment(Pos.CENTER);
 
-        // Outer Background (C8F0FF)
-        BorderPane root = new BorderPane();
-        root.setStyle("-fx-background-color: #C8F0FF;");
+        Label title = new Label("About Us");
+        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
-        // Centered VBox with smaller white background
-        VBox contentBox = new VBox(10);
-        contentBox.setPadding(new Insets(20));
-        contentBox.setAlignment(Pos.CENTER);
-        contentBox.setStyle("-fx-background-color: white; -fx-background-radius: 20;");
-        contentBox.setSpacing(20);
-        contentBox.setMaxWidth(600);
-        contentBox.setMaxHeight(530);
+        TextArea aboutText = new TextArea();
+        aboutText.setEditable(false);
+        aboutText.setWrapText(true);
+        aboutText.setPrefHeight(200);
 
-        // Create Labels for Titles with Outline Effect
-        StackPane title = createOutlinedTitle("About Zvote");
-        StackPane missionTitle = createOutlinedTitle("Our Mission");
-        StackPane teamTitle = createOutlinedTitle("Our Team");
+        // Fetch about info from controller
+        try {
+            aboutText.setText(controller.fetchAboutInfo());
+        } catch (Exception e) {
+            aboutText.setText("Failed to load About Us information.");
+        }
 
-        // Content Labels for "About Us", Mission, and Team
-        Label aboutText = createContentLabel(
-                "Welcome to Zvote! Our platform is dedicated to simplifying and securing the voting process. " +
-                        "Zvote ensures fairness, transparency, and ease of access for all users."
-        );
-
-        Label missionText = createContentLabel(
-                "At Zvote, our mission is to revolutionize the way elections are conducted. " +
-                        "We prioritize security, accessibility, and efficiency to empower every voter."
-        );
-
-        Label teamText = createContentLabel(
-                "Our team consists of passionate developers, security experts, and election specialists. " +
-                        "We are committed to delivering a seamless and secure voting experience."
-        );
-
-        // Back Button (Only for Display, No Navigation)
-        Button backButton = new Button("Back");
-        backButton.setStyle("-fx-font-family: Onyx; -fx-font-size: 20; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
-                " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand");
-        backButton.setPrefHeight(30);
-        backButton.setPrefWidth(100);
-
-        // Add Components to Content Box
-        contentBox.getChildren().addAll(title, aboutText, missionTitle, missionText, teamTitle, teamText, backButton);
-
-        // Center the Content Box in the BorderPane
-        StackPane centerWrapper = new StackPane(contentBox);
-        root.setCenter(centerWrapper);
-
-        // Set Scene with Resizable Background
-        return new Scene(root, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight() - 80);
-    }
-
-    // Helper Method to Create Bold, Outlined Title Labels
-    private StackPane createOutlinedTitle(String text) {
-        Label label = new Label(text);
-        label.setFont(Font.font("Onyx", FontWeight.BOLD, 40));
-
-        // Create an Outline Effect by Stacking Two Labels
-        Label outline = new Label(text);
-        outline.setFont(Font.font("Onyx", FontWeight.BOLD, 40));
-        outline.setTextFill(Color.BLACK);
-        outline.setTranslateX(1.5);
-        outline.setTranslateY(1.5);
-
-        label.setTextFill(Color.web("#C8F0FF"));
-
-        return new StackPane(outline, label);
-    }
-
-    // Helper Method for Content Labels
-    private Label createContentLabel(String text) {
-        Label label = new Label(text);
-        label.setWrapText(true);
-        label.setFont(Font.font("Arial", 16));
-        label.setTextFill(Color.BLACK);
-        label.setMaxWidth(450);  // Adjust Width to Ensure Content Fits
-        return label;
+        layout.getChildren().addAll(title, aboutText);
+        return new Scene(layout, 600, 400);
     }
 }

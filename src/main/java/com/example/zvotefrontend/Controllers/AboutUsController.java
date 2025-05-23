@@ -8,18 +8,20 @@ import java.net.http.HttpResponse;
 
 public class AboutUsController {
 
-    private static final String BASE_URL = "http://localhost:8080/api/about";
+    private static String buildUrl(String endpoint) {
+        final String BASE_URL = "http://localhost:8080/api/";
+        return BASE_URL + endpoint;
+    }
 
-    public static String fetchAboutInfo() throws IOException, InterruptedException {
+    public String fetchAboutInfo() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL))
+                .uri(URI.create(buildUrl("about")))
                 .GET()
                 .header("Accept", "application/json")
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        return response.body(); // Return JSON response from backend
+        return response.body();  // Returns the About Us text from backend
     }
 }
