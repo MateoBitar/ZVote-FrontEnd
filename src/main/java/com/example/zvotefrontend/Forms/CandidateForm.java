@@ -13,7 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import zvotefrontend.Controllers.CandidateController;
+import com.example.zvotefrontend.Controllers.CandidateController;
 
 import java.util.HashMap;
 import java.util.Map;
