@@ -10,6 +10,7 @@ import java.net.http.HttpResponse;
 public class PollController {
     private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
 
+    // GET /zvote/getpoll/{poll_ID}
     public static JSONObject getPollByPoll_ID(int pollId) {
         HttpClient client = HttpClient.newHttpClient();
         try {
@@ -27,16 +28,19 @@ public class PollController {
         }
     }
 
+    // POST /zvote/addvote
     public static void addVote(JSONObject voteData) {
         HttpClient client = HttpClient.newHttpClient();
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(BASE_URL + "/addvote"))
                     .header("Content-Type", "application/json")
+                    .header("Accept", "text/plain")
                     .POST(HttpRequest.BodyPublishers.ofString(voteData.toString()))
                     .build();
 
-            client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println("Vote Response: " + response.body());
         } catch (IOException | InterruptedException e) {
             System.out.println("Error submitting vote: " + e.getMessage());
         }
