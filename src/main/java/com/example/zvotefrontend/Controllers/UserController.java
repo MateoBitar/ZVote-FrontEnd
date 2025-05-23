@@ -10,6 +10,7 @@ import java.net.http.HttpResponse;
 public class UserController {
     private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
 
+    // GET /zvote/getuser/{username}
     public static JSONObject getUserByUsername(String username) {
         HttpClient client = HttpClient.newHttpClient();
         try {
@@ -27,13 +28,14 @@ public class UserController {
         }
     }
 
+    // PUT /zvote/updateuser
     public static void updateUser(JSONObject updatedUserData) {
         HttpClient client = HttpClient.newHttpClient();
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(BASE_URL + "/updateuser"))
                     .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(updatedUserData.toString()))
+                    .PUT(HttpRequest.BodyPublishers.ofString(updatedUserData.toString()))
                     .build();
 
             client.send(request, HttpResponse.BodyHandlers.ofString());
