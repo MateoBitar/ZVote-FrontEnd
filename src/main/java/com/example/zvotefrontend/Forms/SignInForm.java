@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-public class SignIn {
+public class SignInForm {
 
     public Scene createSignInScene(Stage primaryStage) {
         Stage signInStage = new Stage();

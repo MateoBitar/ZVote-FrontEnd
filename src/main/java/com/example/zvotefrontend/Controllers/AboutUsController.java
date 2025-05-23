@@ -6,7 +6,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class AboutUs {
+public class AboutUsController {
 
     private static final String BASE_URL = "http://localhost:8080/api/about";
 

@@ -12,7 +12,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-public class ContactUs {
+public class ContactUsForm {
 
     public Scene createContactUsScene(Stage primaryStage) {
         // Outer Background (C8F0FF)

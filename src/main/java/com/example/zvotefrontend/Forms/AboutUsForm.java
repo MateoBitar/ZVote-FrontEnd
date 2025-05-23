@@ -12,7 +12,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-public class AboutUs {
+public class AboutUsForm {
 
     public Scene createAboutUsScene(Stage primaryStage) {
 

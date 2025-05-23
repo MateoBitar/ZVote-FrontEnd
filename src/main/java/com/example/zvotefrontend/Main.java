@@ -1,8 +1,8 @@
 package com.example.zvotefrontend;
 
-import com.example.zvotefrontend.Controllers.AboutUs;
-import com.example.zvotefrontend.Controllers.ContactUs;
-import com.example.zvotefrontend.Controllers.SignIn;
+import com.example.zvotefrontend.Controllers.AboutUsController;
+import com.example.zvotefrontend.Controllers.ContactUsController;
+import com.example.zvotefrontend.Controllers.SignInController;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -93,7 +93,7 @@ public class Main extends Application {
 
         // Updated button actions → Controllers handle interactions
         about.setOnAction(e -> {
-            AboutUs aboutUsController = new AboutUs();
+            AboutUsController aboutUsController = new AboutUsController();
             try {
                 String aboutInfo = aboutUsController.fetchAboutInfo();
                 System.out.println(aboutInfo); // Replace with actual display logic
@@ -103,7 +103,7 @@ public class Main extends Application {
         });
 
         contact.setOnAction(e -> {
-            ContactUs contactUsController = new ContactUs();
+            ContactUsController contactUsController = new ContactUsController();
             try {
                 String contactInfo = contactUsController.fetchContactInfo();
                 System.out.println(contactInfo); // Replace with actual display logic
@@ -113,7 +113,7 @@ public class Main extends Application {
         });
 
         profileIcon.setOnAction(e -> {
-            SignIn signInController = new SignIn();
+            SignInController signInController = new SignInController();
             try {
                 String loginResponse = signInController.login("testUser", "testPassword"); // Replace with actual user input
                 System.out.println(loginResponse); // Replace with actual handling
@@ -123,7 +123,7 @@ public class Main extends Application {
         });
 
         voteNow.setOnAction(e -> {
-            SignIn signInController = new SignIn();
+            SignInController signInController = new SignInController();
             try {
                 String loginResponse = signInController.login("testUser", "testPassword"); // Replace with actual user input
                 System.out.println(loginResponse); // Replace with actual handling
