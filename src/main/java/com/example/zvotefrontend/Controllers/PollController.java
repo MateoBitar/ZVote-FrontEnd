@@ -8,13 +8,13 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class PollController {
-    private static final String BASE_URL = "http://localhost:8080/api/polls";
+    private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
 
-    public static JSONObject fetchPollDetails(int pollId) {
+    public static JSONObject getPollByPoll_ID(int pollId) {
         HttpClient client = HttpClient.newHttpClient();
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/" + pollId))
+                    .uri(URI.create(BASE_URL + "/getpoll/" + pollId))
                     .GET()
                     .header("Accept", "application/json")
                     .build();
@@ -27,11 +27,11 @@ public class PollController {
         }
     }
 
-    public static void submitVote(JSONObject voteData) {
+    public static void addVote(JSONObject voteData) {
         HttpClient client = HttpClient.newHttpClient();
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/vote"))
+                    .uri(URI.create(BASE_URL + "/addvote"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(voteData.toString()))
                     .build();

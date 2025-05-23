@@ -12,15 +12,15 @@ import org.json.JSONObject;
 
 public class LandingPageController {
 
-    private static final String BACKEND_URL = "http://localhost:8080/api/polls/all";
+    private static final String BASE_URL = "http://192.168.1.10:8080/zvote/getallpolls";
 
-    public List<JSONObject> fetchPolls() {
+    public List<JSONObject> getAllPolls() {
         List<JSONObject> pollsList = new ArrayList<>();
         HttpClient client = HttpClient.newHttpClient();
 
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BACKEND_URL))
+                    .uri(URI.create(BASE_URL))
                     .GET()
                     .header("Accept", "application/json")
                     .build();

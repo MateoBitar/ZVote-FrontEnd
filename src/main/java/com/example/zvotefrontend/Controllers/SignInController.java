@@ -7,18 +7,14 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class SignInController {
-
-    private static String buildUrl(String endpoint) {
-        final String BASE_URL = "http://localhost:8080/api/auth/";
-        return BASE_URL + endpoint;
-    }
+    private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
 
     public String login(String username, String password) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         String requestBody = "{\"username\": \"" + username + "\", \"password\": \"" + password + "\"}";
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(buildUrl("login")))
+                .uri(URI.create(BASE_URL + "/login"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
@@ -32,7 +28,7 @@ public class SignInController {
         String requestBody = "{\"username\": \"" + username + "\", \"email\": \"" + email + "\", \"password\": \"" + password + "\", \"phone\": \"" + phone + "\"}";
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(buildUrl("signup")))
+                .uri(URI.create(BASE_URL + "/register"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();

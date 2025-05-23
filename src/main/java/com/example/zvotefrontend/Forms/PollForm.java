@@ -15,7 +15,7 @@ public class PollForm {
 
     public PollForm(Stage primaryStage, int pollId) {
         this.primaryStage = primaryStage;
-        this.currentPoll = PollController.fetchPollDetails(pollId);
+        this.currentPoll = PollController.getPollByPoll_ID(pollId);
     }
 
     public void showPollDetails() {
@@ -60,7 +60,7 @@ public class PollForm {
                 JSONObject voteData = new JSONObject();
                 voteData.put("pollId", currentPoll.getInt("id"));
                 voteData.put("candidateId", (int) selectedCandidate.getUserData());
-                PollController.submitVote(voteData);
+                PollController.addVote(voteData);
             }
             showPollDetails();
         });

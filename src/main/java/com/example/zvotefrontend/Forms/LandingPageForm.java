@@ -63,7 +63,7 @@ public class LandingPageForm {
     }
 
     private void updatePollGrid(GridPane pollGrid, String query) {
-        List<JSONObject> polls = controller.fetchPolls();  // Fetch API data
+        List<JSONObject> polls = controller.getAllPolls();  // Fetch API data
 
         pollGrid.getChildren().clear();
         int col = 0, row = 0;

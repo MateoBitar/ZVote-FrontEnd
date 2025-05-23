@@ -15,7 +15,7 @@ public class UserForm {
 
     public UserForm(Stage primaryStage, String username) {
         this.primaryStage = primaryStage;
-        this.currentUser = UserController.fetchUserDetails(username);
+        this.currentUser = UserController.getUserByUsername(username);
     }
 
     public void showUserProfile() {
@@ -63,7 +63,7 @@ public class UserForm {
             updatedData.put("email", emailField.getText());
             updatedData.put("phone", phoneField.getText());
             updatedData.put("password", passwordField.getText());
-            UserController.updateUserInfo(updatedData);
+            UserController.updateUser(updatedData);
             showUserProfile();
         });
 
