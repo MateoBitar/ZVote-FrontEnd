@@ -2,106 +2,95 @@ package com.example.zvotefrontend.Forms;
 
 import com.example.zvotefrontend.Controllers.AdminLandingPageController;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class AdminLandingPageForm {
+    private TabPane tabPane;
     private Stage primaryStage;
-    private JSONObject pollsData;
+    private TextField searchBar;
+    private GridPane pollGrid;
 
-    public AdminLandingPageForm(Stage primaryStage) {
+    public void showAdminLandingPage(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        this.pollsData = AdminLandingPageController.fetchPolls();
-    }
 
-    public void showLandingPage() {
-        VBox layout = new VBox(20);
-        layout.setPadding(new Insets(20));
-        layout.setAlignment(Pos.CENTER);
+        BorderPane layout = new BorderPane();
+        layout.setStyle("-fx-background-color: #FFFFFF");
 
-        Label title = new Label("Admin Dashboard");
-        title.setStyle("-fx-font-size: 50px; -fx-font-weight: bold;");
+        setupTopBar(layout);
+        setupTabs(layout);
 
-        Button addPollButton = new Button("Add Poll");
-        Button deletePollButton = new Button("Delete Poll");
-        addPollButton.setOnAction(e -> showCreatePollForm());
-        deletePollButton.setOnAction(e -> showDeletePollForm());
-
-        layout.getChildren().addAll(title, addPollButton, deletePollButton);
-
-        Scene scene = new Scene(layout, 600, 600);
+        Scene scene = new Scene(layout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight() - 80);
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
+
+        // Call the controller to fetch polls
+        AdminLandingPageController controller = new AdminLandingPageController();
+        JSONArray polls = controller.getPolls();
+
+        // Populate UI with polls received from API
+        populatePollGrid(polls);
     }
 
-    public void showDeletePollForm() {
-        VBox deletePollLayout = new VBox(20);
-        deletePollLayout.setPadding(new Insets(20));
-        deletePollLayout.setAlignment(Pos.CENTER);
+    private void setupTopBar(BorderPane layout) {
+        searchBar = new TextField();
+        searchBar.setPromptText("Search...");
+        searchBar.setPrefWidth(300);
 
-        Label title = new Label("Delete Poll");
-        title.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
+        Label logo = new Label("ZVote");
+        logo.setFont(Font.font("Onyx", FontWeight.BOLD, 60));
 
-        ComboBox<String> pollDropdown = new ComboBox<>();
-        for (Object pollObj : pollsData.getJSONArray("polls")) {
-            JSONObject poll = (JSONObject) pollObj;
-            pollDropdown.getItems().add(poll.getString("title"));
+        HBox topBar = new HBox(20, logo, searchBar);
+        topBar.setPadding(new Insets(10, 10, 10, 40));
+        topBar.setStyle("-fx-background-color: #C8F0FF;");
+        topBar.setEffect(new DropShadow(5, Color.LIGHTGRAY));
+
+        layout.setTop(topBar);
+    }
+
+    private void setupTabs(BorderPane layout) {
+        Tab add = new Tab("Add");
+        Tab delete = new Tab("Delete");
+
+        tabPane = new TabPane(add, delete);
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        tabPane.setStyle("-fx-font-weight: bold;");
+
+        pollGrid = new GridPane(); // Grid where polls will be populated
+        layout.setCenter(tabPane);
+    }
+
+    private void populatePollGrid(JSONArray polls) {
+        pollGrid.getChildren().clear();
+
+        for (int i = 0; i < polls.length(); i++) {
+            JSONObject poll = polls.getJSONObject(i);
+            VBox pollCard = createPollCard(poll);
+            pollGrid.add(pollCard, (i % 4), (i / 4));
         }
-
-        Button deleteButton = new Button("Delete");
-        deleteButton.setOnAction(e -> {
-            int selectedPollId = pollsData.getJSONArray("polls")
-                    .getJSONObject(pollDropdown.getSelectionModel().getSelectedIndex())
-                    .getInt("id");
-            AdminLandingPageController.deletePoll(selectedPollId);
-            showLandingPage();
-        });
-
-        deletePollLayout.getChildren().addAll(title, pollDropdown, deleteButton);
-
-        Scene deleteScene = new Scene(deletePollLayout, 500, 500);
-        primaryStage.setScene(deleteScene);
     }
 
-    public void showCreatePollForm() {
-        VBox createPollLayout = new VBox(20);
-        createPollLayout.setPadding(new Insets(20));
-        createPollLayout.setAlignment(Pos.CENTER);
+    private VBox createPollCard(JSONObject poll) {
+        VBox pollCard = new VBox();
+        pollCard.setStyle("-fx-background-color: #C8F0FF; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
-        Label title = new Label("Create New Poll");
-        title.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
+        Label titleLabel = new Label(poll.getString("title"));
+        titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
-        TextField pollTitleField = new TextField();
-        pollTitleField.setPromptText("Poll Title");
+        Label statusLabel = new Label(poll.getString("status"));
+        statusLabel.setStyle("-fx-font-size: 16px;");
 
-        TextField pollDescriptionField = new TextField();
-        pollDescriptionField.setPromptText("Poll Description");
-
-        DatePicker startDatePicker = new DatePicker();
-        startDatePicker.setPromptText("Start Date");
-
-        DatePicker endDatePicker = new DatePicker();
-        endDatePicker.setPromptText("End Date");
-
-        Button createButton = new Button("Create Poll");
-        createButton.setOnAction(e -> {
-            JSONObject pollData = new JSONObject();
-            pollData.put("title", pollTitleField.getText());
-            pollData.put("description", pollDescriptionField.getText());
-            pollData.put("startDate", startDatePicker.getValue().toString());
-            pollData.put("endDate", endDatePicker.getValue().toString());
-
-            AdminLandingPageController.addPoll(pollData);
-            showLandingPage();
-        });
-
-        createPollLayout.getChildren().addAll(title, pollTitleField, pollDescriptionField, startDatePicker, endDatePicker, createButton);
-
-        Scene createScene = new Scene(createPollLayout, 500, 500);
-        primaryStage.setScene(createScene);
+        pollCard.getChildren().addAll(titleLabel, statusLabel);
+        return pollCard;
     }
 }

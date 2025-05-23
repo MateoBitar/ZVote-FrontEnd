@@ -1,59 +1,51 @@
 package com.example.zvotefrontend.Controllers;
 
-import org.json.JSONObject;
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Scanner;
+import org.json.JSONArray;
 
 public class AdminLandingPageController {
-    private static final String BASE_URL = "http://localhost:8080/api/admin";
 
-    public static JSONObject fetchPolls() {
-        HttpClient client = HttpClient.newHttpClient();
+    public JSONArray getPolls() {
         try {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/polls"))
-                    .GET()
-                    .header("Accept", "application/json")
-                    .build();
+            URL url = new URL("http://localhost:8080/api/polls"); // Backend API endpoint
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return new JSONObject(response.body());
-        } catch (IOException | InterruptedException e) {
-            System.out.println("Error fetching polls: " + e.getMessage());
-            return new JSONObject();
+            if (conn.getResponseCode() != 200) {
+                throw new RuntimeException("Failed to fetch polls: HTTP Error " + conn.getResponseCode());
+            }
+
+            Scanner scanner = new Scanner(conn.getInputStream());
+            StringBuilder jsonResponse = new StringBuilder();
+            while (scanner.hasNext()) {
+                jsonResponse.append(scanner.nextLine());
+            }
+            scanner.close();
+            conn.disconnect();
+
+            return new JSONArray(jsonResponse.toString()); // Convert response to JSON array
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching polls: " + e.getMessage());
         }
     }
 
-    public static void deletePoll(int pollId) {
-        HttpClient client = HttpClient.newHttpClient();
+    public boolean deletePoll(String pollId) {
         try {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/polls/delete/" + pollId))
-                    .DELETE()
-                    .header("Accept", "application/json")
-                    .build();
+            URL url = new URL("http://localhost:8080/api/polls/" + pollId); // Backend API endpoint for deleting a poll
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("DELETE");
+            conn.setRequestProperty("Accept", "application/json");
 
-            client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
-            System.out.println("Error deleting poll: " + e.getMessage());
-        }
-    }
-
-    public static void addPoll(JSONObject pollData) {
-        HttpClient client = HttpClient.newHttpClient();
-        try {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/polls/add"))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(pollData.toString()))
-                    .build();
-
-            client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
-            System.out.println("Error adding poll: " + e.getMessage());
+            if (conn.getResponseCode() == 200) {
+                return true; // Poll successfully deleted
+            } else {
+                throw new RuntimeException("Failed to delete poll: HTTP Error " + conn.getResponseCode());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting poll: " + e.getMessage());
         }
     }
 }
