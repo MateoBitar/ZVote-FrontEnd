@@ -228,7 +228,6 @@ public class LandingPageForm {
 
         // Loop through the polls and add poll cards to the grid
         for (JSONObject poll : polls) {
-            System.out.println(poll.toString());
             VBox pollCard = createPollCard(poll);  // Create a poll card using the reusable method
             pollGrid.add(
                     pollCard,

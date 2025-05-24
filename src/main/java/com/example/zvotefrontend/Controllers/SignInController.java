@@ -1,10 +1,13 @@
 package com.example.zvotefrontend.Controllers;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Base64;
 
 public class SignInController {
 
@@ -33,18 +36,26 @@ public class SignInController {
     }
 
     // POST /zvote/users
-    public String signUp(String username, String email, String password, byte[] photoID, String phone) throws IOException, InterruptedException {
+    public String signUp(String username, String email, String password, byte[] photoID, String phone)
+            throws IOException, InterruptedException {
+
         HttpClient client = HttpClient.newHttpClient();
-        String requestBody = String.format(
-                "{\"username\": \"%s\", \"email\": \"%s\", \"password\": \"%s\", \"photoID\": \" \", \"phone\": \"%s\"}",
-                username, email, password, photoID, phone
-        );
+
+        // Encode photoID to Base64 string (because you can't send raw bytes in JSON)
+        String encodedPhoto = Base64.getEncoder().encodeToString(photoID);
+
+        JSONObject requestJson = new JSONObject();
+        requestJson.put("username", username);
+        requestJson.put("email", email);
+        requestJson.put("password", password);
+        requestJson.put("photoID", encodedPhoto);
+        requestJson.put("phone", phone);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/users"))
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .POST(HttpRequest.BodyPublishers.ofString(requestJson.toString()))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
