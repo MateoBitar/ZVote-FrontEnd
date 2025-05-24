@@ -33,13 +33,14 @@ import java.util.Map;
 public class AdminLandingPageForm {
 
     private AdminLandingPageController controller = new AdminLandingPageController();  // API Connection
-
+    private Stage primaryStage;
     TabPane tabPane;  // Tab pane for navigating between add and delete operations
     public static Map<String, String> userSession;  // Holds session details for the logged-in user
 
 
     // Method to display the admin landing page
     public void showAdminLandingPage(Stage primaryStage, Map<String, String> userSession) throws Exception {
+        this.primaryStage = primaryStage;
         this.userSession = userSession;
 
         // Main layout
@@ -446,7 +447,7 @@ public class AdminLandingPageForm {
 
         viewPollButton.setOnAction(event -> {
             try {
-                new AdminPollDetailsForm().showAdminPollDetails(primaryStage, poll.optInt("poll_ID"));
+                new AdminPollDetailsForm().showAdminPollDetails(primaryStage, poll.optInt("poll_ID"), userSession);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
