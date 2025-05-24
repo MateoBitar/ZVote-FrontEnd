@@ -214,8 +214,8 @@ public class LandingPageForm {
 
         return allPolls.stream()
                 .filter(poll -> {
-                    String title = poll.optString("title", "").toLowerCase();
-                    String description = poll.optString("description", "").toLowerCase();
+                    String title = poll.optString("title", null).toLowerCase();
+                    String description = poll.optString("description", null).toLowerCase();
 
                     return title.contains(lowerQuery) || description.contains(lowerQuery);
                 })
@@ -277,17 +277,12 @@ public class LandingPageForm {
         Label statusLabel = new Label();
         statusLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #000000;");
 
-        long startMillis = Long.getLong(poll.optString("start_date", null));
-        long endMillis = Long.getLong(poll.optString("end_date", null));
+        String startDateStr = poll.optString("start_date", null);
+        String endDateStr = poll.optString("end_date", null);
 
-        Timestamp startDate = startMillis != 0 ? new Timestamp(startMillis) : null;
-        Timestamp endDate = endMillis != 0 ? new Timestamp(endMillis) : null;
+        LocalDate startLocalDate = startDateStr != null ? LocalDate.parse(startDateStr) : null;
+        LocalDate endLocalDate = endDateStr != null ? LocalDate.parse(endDateStr) : null;
 
-        assert startDate != null;
-        LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-        assert endDate != null;
-        LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate today = LocalDate.now();
         long daysLeft = ChronoUnit.DAYS.between(today, endLocalDate);
 
