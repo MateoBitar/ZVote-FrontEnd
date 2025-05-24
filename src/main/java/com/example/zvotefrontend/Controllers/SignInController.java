@@ -26,7 +26,7 @@ public class SignInController {
         return response.body();
     }
 
-    // POST /zvote/addUser
+    // POST /zvote/users
     public String signUp(String username, String email, String password, String phone) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         String requestBody = String.format(
@@ -35,7 +35,7 @@ public class SignInController {
         );
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/adduser"))
+                .uri(URI.create(BASE_URL + "/users"))
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
