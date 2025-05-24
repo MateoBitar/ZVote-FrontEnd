@@ -10,12 +10,12 @@ import java.net.http.HttpResponse;
 public class PollController {
     private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
 
-    // GET /zvote/getpoll/{poll_ID}
+    // GET /zvote/polls/{poll_ID}
     public static JSONObject getPollByPoll_ID(int pollId) {
         HttpClient client = HttpClient.newHttpClient();
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/getpoll/" + pollId))
+                    .uri(URI.create(BASE_URL + "/polls/" + pollId))
                     .GET()
                     .header("Accept", "application/json")
                     .build();
