@@ -2,7 +2,6 @@ package com.example.zvotefrontend.Forms;
 
 import com.example.zvotefrontend.Controllers.LandingPageController;
 import com.example.zvotefrontend.Controllers.PollController;
-import com.example.zvotefrontend.Controllers.UserController;
 import com.example.zvotefrontend.Main;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
@@ -20,9 +19,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.json.JSONObject;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
@@ -84,8 +81,8 @@ public class LandingPageForm {
         // Menu Items for Profile Menu
         MenuItem userInfoItem = new MenuItem("User Info");
         userInfoItem.setOnAction(e -> {
-            UserForm userForm = new UserForm(primaryStage, userSession.get("username"));
-            userForm.showUserProfile();
+            UserForm userForm = new UserForm();
+            userForm.showUserProfile(primaryStage, userSession.get("username"));
         });
 
         MenuItem logoutItem = new MenuItem("Log Out");
@@ -190,19 +187,19 @@ public class LandingPageForm {
     static void animateMenu(Button poll, MenuButton profile) {
         isMenuOpen = !isMenuOpen;  // Toggle the menu state
         double targetX = isMenuOpen ? 0 : 150;  // Determine the target position based on menu state
-        animateItem(poll, targetX);  // Animate poll button
-        animateItem(profile, targetX);  // Animate profile menu button
+        animateMenu(poll, targetX);  // Animate poll button
+        animateMenu(profile, targetX);  // Animate profile menu button
     }
 
     // Animation method for Button elements
-    private static void animateItem(Button item, double targetX) {
+    private static void animateMenu(Button item, double targetX) {
         TranslateTransition transition = new TranslateTransition(Duration.millis(300), item);  // Configure animation
         transition.setToX(targetX);  // Set target X position
         transition.play();  // Play the animation
     }
 
     // Animation method for MenuButton elements
-    private static void animateItem(MenuButton item, double targetX) {
+    private static void animateMenu(MenuButton item, double targetX) {
         TranslateTransition transition = new TranslateTransition(Duration.millis(300), item);  // Configure animation
         transition.setToX(targetX);  // Set target X position
         transition.play();  // Play the animation
@@ -309,10 +306,8 @@ public class LandingPageForm {
         candidatesBox.setPadding(new Insets(20, 0, 0, 0));
         candidatesBox.getChildren().add(candidatesLabel);
 
-        LandingPageController controller = new LandingPageController();
-        List<JSONObject> candidates = controller.getCandidatesWithVotesByPollID(poll.optInt("poll_id"));
+        List<JSONObject> candidates = controller.getCandidatesWithVotesByPollID(poll.optInt("poll_ID"));
 
-        candidatesBox.getChildren().clear();
 
         for (JSONObject candidate : candidates) {
             String name = candidate.optString("name", "Unknown");

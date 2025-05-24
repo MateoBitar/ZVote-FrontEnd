@@ -20,7 +20,7 @@ public class AdminPollDetailsForm {
     private Label pollTitleLabel, pollDescriptionLabel, statusLabel;
     private PieChart pieChart;
 
-    public void showAdminPollDetails(Stage primaryStage, String pollId) {
+    public void showAdminPollDetails(Stage primaryStage, int pollId) {
         this.primaryStage = primaryStage;
         this.controller = new AdminPollDetailsController();
 

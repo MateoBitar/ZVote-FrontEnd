@@ -34,7 +34,7 @@ public class UserController {
     }
 
     // PUT /zvote/users
-    public static void updateUser(JSONObject updatedUserData) {
+    public void updateUser(JSONObject updatedUserData) {
         HttpClient client = HttpClient.newHttpClient();
         try {
             HttpRequest request = HttpRequest.newBuilder()

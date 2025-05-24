@@ -235,9 +235,9 @@ public class SignInForm {
                 try {
                     userSession.put("username", LUsernameField.getText());
 
-                    if (UserController.getUserByUsername(LUsernameField.getText()).equals("admin")) {
+                    if (UserController.getUserByUsername(LUsernameField.getText()).optString("role").equals("admin")) {
                         AdminLandingPageForm main = new AdminLandingPageForm();
-                        main.showAdminLandingPage(primaryStage);
+                        main.showAdminLandingPage(primaryStage, userSession);
                     } else {
                         LandingPageForm main = new LandingPageForm();
                         main.showLandingPage(primaryStage, userSession);
