@@ -240,7 +240,7 @@ public class UserForm {
                 "-fx-border-radius: 20px; -fx-background-radius: 20px");
         emailField.setPrefWidth(5);
 
-        TextField phoneField = new TextField(UserController.getUserByUsername(userSession.get("username")).optString("user_phone"));
+        TextField phoneField = new TextField(UserController.getUserByUsername(userSession.get("username")).optString("phoneNb"));
         phoneField.setPromptText("Enter your new phone number.");
         phoneField.setStyle("-fx-border-color: #C8F0FF; -fx-border-width: 2px; -fx-padding: 10px;" +
                 "-fx-border-radius: 20px; -fx-background-radius: 20px");
