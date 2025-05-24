@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 
 public class CandidatesForm {
 
@@ -25,7 +26,7 @@ public class CandidatesForm {
     private GridPane addCandidateGrid;
     private GridPane deleteCandidateGrid;
 
-    public void showCandidatesPage(Stage primaryStage) {
+    public void showCandidatesPage(Stage primaryStage, Map<String, String> usersession) {
         this.primaryStage = primaryStage;
 
         // Main layout

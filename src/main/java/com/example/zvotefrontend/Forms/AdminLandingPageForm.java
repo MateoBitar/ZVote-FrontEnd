@@ -88,7 +88,7 @@ public class AdminLandingPageForm {
         MenuItem candidatesItem = new MenuItem("Candidates");
         candidatesItem.setOnAction(e -> {
             try {
-                new CandidatesForm().showCandidatesPage(primaryStage, userSession.get("username"));
+                new CandidatesForm().showCandidatesPage(primaryStage, userSession);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -184,7 +184,7 @@ public class AdminLandingPageForm {
                 "-fx-border-width: 3px; -fx-border-style: dashed; -fx-cursor: hand;");
         addPollButton.setOnAction(e -> {
             try {
-                new AdminPollForm().showCreatePoll(primaryStage, userSession.get("username"));
+                new AdminPollForm().showCreatePoll(primaryStage, userSession);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }

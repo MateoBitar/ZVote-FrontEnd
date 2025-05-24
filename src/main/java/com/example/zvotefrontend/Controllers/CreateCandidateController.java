@@ -12,7 +12,7 @@ import org.json.JSONObject;
 public class CreateCandidateController {
     private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
 
-    public boolean createCandidate(JSONObject candidateData, File photoFile) {
+    public boolean createCandidate(JSONObject candidateData) {
         try {
             URL url = new URL(BASE_URL + "/candidates"); // Backend API endpoint
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -20,10 +20,6 @@ public class CreateCandidateController {
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoOutput(true);
-
-            // Convert photo file to byte array and add to JSON
-            byte[] photoBytes = photoFile != null ? Files.readAllBytes(photoFile.toPath()) : new byte[0];
-            candidateData.put("photo", Base64.getEncoder().encodeToString(photoBytes));
 
             OutputStream os = conn.getOutputStream();
             os.write(candidateData.toString().getBytes());

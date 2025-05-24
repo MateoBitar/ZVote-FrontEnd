@@ -13,6 +13,8 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public class AdminPollForm {
     private Stage primaryStage;
     private GridPane pollForm;
@@ -20,7 +22,7 @@ public class AdminPollForm {
     private DatePicker startDatePicker, endDatePicker;
     private AdminPollController controller;
 
-    public void showCreatePoll(Stage primaryStage) {
+    public void showCreatePoll(Stage primaryStage, Map<String, String> usersession) {
         this.primaryStage = primaryStage;
         this.controller = new AdminPollController();
 
