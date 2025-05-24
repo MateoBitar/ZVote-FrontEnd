@@ -210,10 +210,16 @@ public class LandingPageForm {
 
     // Method to filter polls based on a search query
     private List<JSONObject> filterPolls(List<JSONObject> allPolls, String query) {
-        return allPolls.stream()  // Stream through all polls
-                .filter(poll -> poll.getTitle().toLowerCase().contains(query.toLowerCase()) ||
-                        poll.getDescription().toLowerCase().contains(query.toLowerCase()))  // Match title or description
-                .toList();  // Collect the filtered polls into a list
+        String lowerQuery = query.toLowerCase();
+
+        return allPolls.stream()
+                .filter(poll -> {
+                    String title = poll.optString("title", "").toLowerCase();
+                    String description = poll.optString("description", "").toLowerCase();
+
+                    return title.contains(lowerQuery) || description.contains(lowerQuery);
+                })
+                .toList();
     }
 
     // Method to populate the poll grid with polls
@@ -248,8 +254,8 @@ public class LandingPageForm {
         );
         pollCard.setPrefSize(300, 400);  // Set preferred dimensions for the poll card
 
-        // Poll Label (Title)
-        Label pollLabel = new Label(poll.getTitle());
+        String title = poll.optString("title", "No Title");
+        Label pollLabel = new Label(title);
         pollLabel.setStyle(
                 "-fx-background-color: #FFFFFF;" +
                         "-fx-border-radius: 10px; " +
@@ -259,6 +265,7 @@ public class LandingPageForm {
                         "-fx-font-size: 30px;" +
                         "-fx-font-weight: bold;"
         );
+
         pollLabel.setAlignment(Pos.CENTER);
         pollLabel.setWrapText(true);
         pollLabel.setMaxWidth(250);
@@ -269,8 +276,11 @@ public class LandingPageForm {
         Label statusLabel = new Label();
         statusLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #000000;");
 
-        Timestamp startDate = (Timestamp) poll.getStart_date();  // Convert start date
-        Timestamp endDate = (Timestamp) poll.getEnd_date();      // Convert end date
+        long startMillis = poll.optLong("start_date", 0);
+        long endMillis = poll.optLong("end_date", 0);
+
+        Timestamp startDate = startMillis != 0 ? new Timestamp(startMillis) : null;
+        Timestamp endDate = endMillis != 0 ? new Timestamp(endMillis) : null;
 
         LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
