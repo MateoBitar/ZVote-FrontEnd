@@ -16,10 +16,13 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignInForm {
 
     private final SignInController controller = new SignInController();  // Connect to backend
+    public static Map<String, String> userSession = new HashMap<>();  // Holds session details
 
     public void showSignInScene(Stage primaryStage) {
         Stage signInStage = new Stage();
@@ -177,6 +180,8 @@ public class SignInForm {
                         photoID,
                         numericCode + " " + phoneField.getText());
 
+                userSession.put("username", SUsernameField.getText());
+
                 // Clear fields after successful sign-up
                 SUsernameField.clear();
                 SEmailField.clear();
@@ -220,6 +225,8 @@ public class SignInForm {
 
             if (isValidUser) {
                 try {
+                    userSession.put("username", LUsernameField.getText());
+
                     if (UserController.getUserByUsername(LUsernameField.getText()).equals("admin")) {
                         AdminLandingPageForm main = new AdminLandingPageForm();
                         main.showAdminLandingPage(primaryStage);

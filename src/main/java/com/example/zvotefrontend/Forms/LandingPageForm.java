@@ -25,12 +25,22 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 
 public class LandingPageForm {
 
     private final LandingPageController controller = new LandingPageController();  // API Connection
 
-    public void showLandingPage(Stage primaryStage) {
+    Stage primaryStage;  // Reference to the primary stage
+    Map<String, String> userSession;  // Holds session details for the logged-in user
+
+
+    // Method to display the landing page
+    public void showLandingPage(Stage primaryStage, Map<String, String> userSession) throws Exception {
+        this.primaryStage = primaryStage;
+        this.userSession = userSession;
+
+
         // Main layout
         BorderPane layout = new BorderPane();
         layout.setStyle("-fx-background-color: #FFFFFF");
@@ -74,7 +84,7 @@ public class LandingPageForm {
         // Menu Items for Profile Menu
         MenuItem userInfoItem = new MenuItem("User Info");
         userInfoItem.setOnAction(e -> {
-            UserForm userForm = new UseForm(primaryStage,);
+            UserForm userForm = new UserForm(primaryStage, userSession.get("username"));
             userForm.showUserProfile();
         });
 
@@ -144,7 +154,8 @@ public class LandingPageForm {
 
 
         // Fetch all polls from the PollService
-        List<JSONObject> allPolls = controller.getAllPolls();
+        PollService pollService = new PollService();
+        List<PollModel> allPolls = pollService.getAllPolls();
         populatePollGrid(pollGrid, allPolls);  // Populate the grid with polls
 
 
@@ -152,10 +163,10 @@ public class LandingPageForm {
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 PollService pollServiceForFilter = new PollService();
-                List<JSONObject> allPollsForFilter = pollServiceForFilter.getAllPolls();
+                List<PollModel> allPollsForFilter = pollServiceForFilter.getAllPolls();
 
                 // Apply the search query filter
-                List<JSONObject> filteredPolls = filterPolls(allPollsForFilter, newValue);
+                List<PollModel> filteredPolls = filterPolls(allPollsForFilter, newValue);
                 populatePollGrid(pollGrid, filteredPolls);
 
             } catch (Exception e) {
@@ -200,7 +211,7 @@ public class LandingPageForm {
     }
 
     // Method to filter polls based on a search query
-    private List<JSONObject> filterPolls(List<JSONObject> allPolls, String query) {
+    private List<PollModel> filterPolls(List<PollModel> allPolls, String query) {
         return allPolls.stream()  // Stream through all polls
                 .filter(poll -> poll.getTitle().toLowerCase().contains(query.toLowerCase()) ||
                         poll.getDescription().toLowerCase().contains(query.toLowerCase()))  // Match title or description
@@ -208,11 +219,11 @@ public class LandingPageForm {
     }
 
     // Method to populate the poll grid with polls
-    private void populatePollGrid(GridPane pollGrid, List<JSONObject> polls) throws Exception {
+    private void populatePollGrid(GridPane pollGrid, List<PollModel> polls) throws Exception {
         pollGrid.getChildren().clear();  // Clear existing content in the grid
 
         // Loop through the polls and add poll cards to the grid
-        for (JSONObject poll : polls) {
+        for (PollModel poll : polls) {
             VBox pollCard = createPollCard(poll);  // Create a poll card using the reusable method
             pollGrid.add(
                     pollCard,
@@ -225,7 +236,7 @@ public class LandingPageForm {
     }
 
     // Method to create a reusable poll card
-    private VBox createPollCard(JSONObject poll) throws Exception {
+    private VBox createPollCard(PollModel poll) throws Exception {
         VBox pollCard = new VBox();
         pollCard.setAlignment(Pos.TOP_CENTER);
         pollCard.setPadding(new Insets(10));
