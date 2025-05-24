@@ -13,7 +13,7 @@ import org.json.JSONObject;
 public class LandingPageController {
     private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
 
-    // GET /zvote/getallpolls
+    // GET /zvote/polls
     public List<JSONObject> getAllPolls() {
         List<JSONObject> pollsList = new ArrayList<>();
         HttpClient client = HttpClient.newHttpClient();
