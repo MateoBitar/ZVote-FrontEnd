@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import org.json.JSONObject;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -134,9 +135,16 @@ public class PollForm {
         LandingPageController landingPageController = new LandingPageController();
         List<JSONObject> candidates = landingPageController.getCandidatesWithVotesByPollID(poll_ID);
 
+        // Calculate total votes
+        int totalVotes = candidates.stream()
+                .mapToInt(c -> c.optInt("votes", 0))
+                .sum();
+
         PieChart pieChart = new PieChart();
         for (JSONObject candidate : candidates) {
-            PieChart.Data slice = new PieChart.Data(candidate.optString("name"), candidate.getVotePercentage());
+            int votes = candidate.optInt("votes", 0);
+            PieChart.Data slice = new PieChart.Data(candidate.optString("name"), controller.getVotePercentage(votes, totalVotes)
+            );
             pieChart.getData().add(slice);
         }
         pieChart.setLegendVisible(true);
@@ -148,7 +156,7 @@ public class PollForm {
         // Display Winner if Poll is Completed
         Label winnerLabel = null;
         if (daysLeft < 0) {
-            winnerLabel = new Label("Winner: " + resultService.getWinnerByPollID(poll_ID).getName());
+            winnerLabel = new Label("Winner: " + controller.getWinnerByPoll_ID(poll_ID).optString("name"));
             winnerLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: Black;");
         }
 
@@ -167,9 +175,7 @@ public class PollForm {
 
         pollInfoSection.getChildren().addAll(pollTitleLabel, pollDescriptionLabel, statusLabel, chartTitle, space, pieChart);
 
-        VoteService voteService = new VoteService();
-        boolean hasVoted = voteService.hasUserVoted(UserController.getUserByUsername(userSession.get("username")).optInt("user_ID"),
-                poll_ID);
+        boolean hasVoted = controller.hasUserVoted(UserController.getUserByUsername(userSession.get("username")).optInt("user_ID"), poll_ID);
 
         if (today.isBefore(startLocalDate)) {
             Label inactiveLabel = new Label("Voting Starts On • " + startLocalDate);
@@ -275,13 +281,23 @@ public class PollForm {
 
             if (selectedCandidate == null) {  // No candidate selected, submit as abstention
                 try {
-                    VoteModel abstainVote = new VoteModel(UserController.getUserByUsername(userSession.get("username")).optInt("user_ID"),
-                            poll.optInt("poll_ID"), 1, 0);
-                    new VoteService().addVote(abstainVote);
+                    JSONObject abstainVote = new JSONObject();
 
+                    abstainVote.put("user_ID", UserController.getUserByUsername(userSession.get("user_ID")).optInt("user_ID"));
+                    abstainVote.put("poll_ID", poll.optInt("poll_ID"));
+
+                    // Set current timestamp
+                    abstainVote.put("timestamp", Instant.now().toString());
+
+                    // Set candidate_ID to JSONObject.NULL to serialize it as null in JSON
+                    abstainVote.put("candidate_ID", JSONObject.NULL);
+
+                    PollController.addVote(abstainVote);
+
+                    // Update poll info
                     poll.put("nbOfVotes", poll.optInt("nbOfVotes") + 1);
                     poll.put("nbOfAbstentions", poll.optInt("nbOfAbstentions") + 1);
-                    new PollService().updatePoll(poll);
+                    controller.updatePoll(poll);
 
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Vote Submitted");
@@ -295,22 +311,31 @@ public class PollForm {
                 }
             } else {  // Candidate selected, submit vote for candidate
                 try {
-                    int pollId = poll.optInt("poll_id");
+                    int pollId = poll.optInt("poll_ID");
                     int candidateId = (int) selectedCandidate.getUserData();
                     int voterId = UserController.getUserByUsername(userSession.get("username")).optInt("user_ID");
 
-                    VoteModel vote = new VoteModel(voterId, pollId, 0, candidateId);
-                    new VoteService().addVote(vote);
+                    JSONObject Vote = new JSONObject();
+                    Vote.put("user_ID", voterId);
+                    Vote.put("poll_ID", pollId);
 
-                    ResultModel result = new ResultService().getResultByPollAndCandidateID(pollId, candidateId);
+                    // Set current timestamp
+                    Vote.put("timestamp", Instant.now().toString());
+
+                    Vote.put("candidate_ID", candidateId);
+
+                    PollController.addVote(Vote);
+
+                    JSONObject result = controller.getResultByPollAndCandidate(pollId, candidateId);
+
                     if (result == null) {
                         showAlert(Alert.AlertType.ERROR, "Failed to submit vote", "No result object found for this poll and candidate!");
                     } else {
-                        result.setVotes_casted(result.getVotes_casted() + 1);
-                        new ResultService().updateResult(result);
+                        result.put("votes_casted", result.optInt("votes_casted") + 1);
+                        controller.updateResult(result);
 
                         poll.put("nbOfVotes", poll.optInt("nbOfVotes") + 1);
-                        new PollService().updatePoll(poll);
+                        controller.updatePoll(poll);
 
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Success");
