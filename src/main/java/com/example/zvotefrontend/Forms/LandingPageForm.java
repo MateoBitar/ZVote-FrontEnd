@@ -228,6 +228,7 @@ public class LandingPageForm {
 
         // Loop through the polls and add poll cards to the grid
         for (JSONObject poll : polls) {
+            System.out.println(poll.toString());
             VBox pollCard = createPollCard(poll);  // Create a poll card using the reusable method
             pollGrid.add(
                     pollCard,
@@ -254,7 +255,7 @@ public class LandingPageForm {
         );
         pollCard.setPrefSize(300, 400);  // Set preferred dimensions for the poll card
 
-        String title = poll.optString("title", "No Title");
+        String title = poll.optString("title", null);
         Label pollLabel = new Label(title);
         pollLabel.setStyle(
                 "-fx-background-color: #FFFFFF;" +
@@ -276,13 +277,16 @@ public class LandingPageForm {
         Label statusLabel = new Label();
         statusLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #000000;");
 
-        long startMillis = poll.optLong("start_date", 0);
-        long endMillis = poll.optLong("end_date", 0);
+        long startMillis = Long.getLong(poll.optString("start_date", null));
+        long endMillis = Long.getLong(poll.optString("end_date", null));
 
         Timestamp startDate = startMillis != 0 ? new Timestamp(startMillis) : null;
         Timestamp endDate = endMillis != 0 ? new Timestamp(endMillis) : null;
 
+        assert startDate != null;
         LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        assert endDate != null;
         LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate today = LocalDate.now();
         long daysLeft = ChronoUnit.DAYS.between(today, endLocalDate);
@@ -311,20 +315,25 @@ public class LandingPageForm {
         candidatesBox.setPadding(new Insets(20, 0, 0, 0));
         candidatesBox.getChildren().add(candidatesLabel);
 
-        ResultService resultService = new ResultService();
-        List<CandidateModel> candidates = resultService.getCandidatesWithVotesByPollID(poll.getPoll_ID());
+        LandingPageController controller = new LandingPageController();
+        List<JSONObject> candidates = controller.getCandidatesWithVotesByPollID(poll.optInt("poll_id"));
 
-        for (CandidateModel candidate : candidates) {
+        candidatesBox.getChildren().clear();
+
+        for (JSONObject candidate : candidates) {
+            String name = candidate.optString("name", "Unknown");
+            double votePercentage = candidate.optDouble("votePercentage", 0.0);
+
             HBox candidateBox = new HBox(10);
             candidateBox.setAlignment(Pos.CENTER_LEFT);
 
-            Label nameLabel = new Label(candidate.getName());
+            Label nameLabel = new Label(name);
             nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: normal;");
 
-            Label percentageLabel = new Label(String.format("%.1f%%", candidate.getVotePercentage() * 100));
+            Label percentageLabel = new Label(String.format("%.1f%%", votePercentage * 100));
             percentageLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: normal;");
 
-            ProgressBar voteBar = new ProgressBar(candidate.getVotePercentage());
+            ProgressBar voteBar = new ProgressBar(votePercentage);
             voteBar.setPrefWidth(80);
             voteBar.progressProperty().addListener((observable, oldValue, newValue) -> {
                 percentageLabel.setText(String.format("%.1f%%", newValue.doubleValue() * 100));
@@ -333,6 +342,7 @@ public class LandingPageForm {
             candidateBox.getChildren().addAll(nameLabel, voteBar, percentageLabel);
             candidatesBox.getChildren().add(candidateBox);
         }
+
 
 
         // Add space between title and button
@@ -356,13 +366,14 @@ public class LandingPageForm {
         viewPollButton.setOnAction(e -> {
             PollController pollController = new PollController();
             try {
-                UserModel user = (UserModel) userSession.get("user");
-                if (user == null) {
+                String username = userSession.get("username");
+                if (username == null) {
                     throw new Exception("User data is missing in the session!");
                 }
 
                 // Navigate to the poll details
-                pollController.showPollDetails(primaryStage, poll, user);
+                PollForm pollForm = new PollForm(primaryStage, poll.optInt("poll_id"));
+                pollForm.showPollDetails();
             } catch (Exception ex) {
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR, "An error occurred while navigating to poll details.");
                 errorAlert.setContentText(ex.getMessage());

@@ -193,7 +193,7 @@ public class SignInForm {
                 // Transition to the landing page
                 signInStage.close();
                 LandingPageForm main = new LandingPageForm();
-                main.showLandingPage(primaryStage);
+                main.showLandingPage(primaryStage, userSession);
 
             } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while processing your request.");
@@ -232,7 +232,7 @@ public class SignInForm {
                         main.showAdminLandingPage(primaryStage);
                     } else {
                         LandingPageForm main = new LandingPageForm();
-                        main.showLandingPage(primaryStage);
+                        main.showLandingPage(primaryStage, userSession);
                     }
                     // Clear fields after successful login
                     LUsernameField.clear();

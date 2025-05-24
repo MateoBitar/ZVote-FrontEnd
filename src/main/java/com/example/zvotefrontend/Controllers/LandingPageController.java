@@ -45,4 +45,35 @@ public class LandingPageController {
 
         return pollsList;
     }
+
+    // Synchronous call to get candidates for a poll as JSONObjects
+    public List<JSONObject> getCandidatesWithVotesByPollID(int pollID) {
+        List<JSONObject> candidatesList = new ArrayList<>();
+        HttpClient client = HttpClient.newHttpClient();
+
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_URL + "/candidateswithvotes/" + pollID))
+                    .GET()
+                    .header("Accept", "application/json")
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            String responseBody = response.body();
+
+            if (response.statusCode() == 200 && responseBody.trim().startsWith("[")) {
+                JSONArray candidatesArray = new JSONArray(responseBody);
+                for (int i = 0; i < candidatesArray.length(); i++) {
+                    candidatesList.add(candidatesArray.getJSONObject(i));
+                }
+            } else {
+                System.out.println("Unexpected response: " + responseBody);
+            }
+
+        } catch (IOException | InterruptedException e) {
+            System.out.println("Error fetching candidates: " + e.getMessage());
+        }
+
+        return candidatesList;
+    }
 }
