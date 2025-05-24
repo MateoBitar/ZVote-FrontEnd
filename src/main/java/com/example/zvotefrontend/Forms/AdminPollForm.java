@@ -1,5 +1,7 @@
 package com.example.zvotefrontend.Forms;
 
+import com.example.zvotefrontend.Controllers.AdminPollController;
+import com.example.zvotefrontend.Controllers.UserController;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,18 +15,25 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.json.JSONObject;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.Map;
 
 
 public class AdminPollForm {
 
     private Stage primaryStage;
+    private final AdminPollController controller = new AdminPollController();
+    public static Map<String, String> userSession = new HashMap<>();
+
     // Method to display the "Create Poll" form
-    public void showCreatePoll(Stage primaryStage, Map<String, String> user) throws Exception {
+    public void showCreatePoll(Stage primaryStage, Map<String, String> userSession) throws Exception {
+        this.primaryStage = primaryStage;
+        this.userSession = userSession;
 
         // Main layout
         BorderPane layout = new BorderPane();
@@ -54,9 +63,8 @@ public class AdminPollForm {
                 "-fx-cursor: hand");
         backButton.setOnAction(event -> {
             try {
-                AdminLandingPageController adminLandingPageController = new AdminLandingPageController();
-                UserController.userSession.put("user", user);
-                adminLandingPageController.showAdminLandingPage(primaryStage, UserController.userSession);
+                AdminLandingPageForm adminLandingPageForm = new AdminLandingPageForm();
+                adminLandingPageForm.showAdminLandingPage(primaryStage, userSession);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -154,13 +162,16 @@ public class AdminPollForm {
             }
 
 
-            PollModel newPoll = new PollModel(pollTitleField.getText(), pollDescriptionField.getText(),
-                    Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()),
-                    Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant()), user.getUser_ID());
+            JSONObject newPoll = new JSONObject();
+            newPoll.put("title", pollTitleField.getText());
+            newPoll.put("description", pollDescriptionField.getText());
+            newPoll.put("start_date", Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime());
+            newPoll.put("end_date", Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime());
+            newPoll.put("admin_ID", UserController.getUserByUsername(userSession.get("username")).optInt("admin_ID"));
 
             try {
-                newPoll.setPoll_ID(new PollService().addPoll(newPoll));
-                new CandidateController().displayCandidates(primaryStage, newPoll.getPoll_ID());
+                controller.createPoll(newPoll);
+                new CandidateForm().displayCandidates(primaryStage, newPoll.optInt("poll_ID"), userSession);
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText("Title Unavailable");

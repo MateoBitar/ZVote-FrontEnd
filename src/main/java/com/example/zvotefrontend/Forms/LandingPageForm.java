@@ -27,13 +27,14 @@ import java.util.Map;
 public class LandingPageForm {
 
     private final LandingPageController controller = new LandingPageController();  // API Connection
-
+    public Stage primaryStage;
     public static Map<String, String> userSession;  // Holds session details for the logged-in user
 
 
     // Method to display the landing page
     public void showLandingPage(Stage primaryStage, Map<String, String> userSession) throws Exception {
         this.userSession = userSession;
+        this.primaryStage = primaryStage;
 
         // Main layout
         BorderPane layout = new BorderPane();
