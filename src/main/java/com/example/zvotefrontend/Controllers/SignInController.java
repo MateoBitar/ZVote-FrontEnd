@@ -11,7 +11,7 @@ import java.util.Base64;
 
 public class SignInController {
 
-    private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
+    private static final String BASE_URL = "http://192.168.1.4:8080/zvote";
 
     // POST /zvote/login
     public boolean login(String username, String password) throws IOException, InterruptedException {

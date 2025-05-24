@@ -13,7 +13,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class UserController {
-    private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
+    private static final String BASE_URL = "http://192.168.1.4:8080/zvote";
 
     // GET /zvote/users/{username}
     public static JSONObject getUserByUsername(String username) {

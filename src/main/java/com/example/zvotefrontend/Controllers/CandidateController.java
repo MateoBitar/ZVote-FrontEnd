@@ -17,7 +17,7 @@ import java.net.http.HttpResponse;
 import java.util.stream.Collectors;
 
 public class CandidateController {
-    private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
+    private static final String BASE_URL = "http://192.168.1.4:8080/zvote";
 
     public ObservableList<String> getCandidateNames() {
         try {

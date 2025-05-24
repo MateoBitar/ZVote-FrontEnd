@@ -6,7 +6,7 @@ import java.util.Scanner;
 import org.json.JSONObject;
 
 public class AdminPollDetailsController {
-    private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
+    private static final String BASE_URL = "http://192.168.1.4:8080/zvote";
 
     public JSONObject getPollDetails(String pollId) {
         try {

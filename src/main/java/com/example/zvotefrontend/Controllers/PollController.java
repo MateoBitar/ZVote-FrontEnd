@@ -8,7 +8,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class PollController {
-    private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
+    private static final String BASE_URL = "http://192.168.1.4:8080/zvote";
 
     // GET /zvote/polls/{poll_ID}
     public static JSONObject getPollByPoll_ID(int pollId) {
