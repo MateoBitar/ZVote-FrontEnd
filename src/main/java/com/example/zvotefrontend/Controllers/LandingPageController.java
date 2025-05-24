@@ -11,17 +11,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class LandingPageController {
+    private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
 
-    private static final String BASE_URL = "http://192.168.1.10:8080/zvote/getallpolls";
-
-    // GET /zvote/getallvotes
+    // GET /zvote/getallpolls
     public List<JSONObject> getAllPolls() {
         List<JSONObject> pollsList = new ArrayList<>();
         HttpClient client = HttpClient.newHttpClient();
 
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL))
+                    .uri(URI.create(BASE_URL + "/polls/"))
                     .GET()
                     .header("Accept", "application/json")
                     .build();

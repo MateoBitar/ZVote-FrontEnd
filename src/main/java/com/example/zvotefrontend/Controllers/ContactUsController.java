@@ -7,16 +7,12 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class ContactUsController {
-
-    private static String buildUrl(String endpoint) {
-        final String BASE_URL = "http://localhost:8080/api/";
-        return BASE_URL + endpoint;
-    }
+    private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
 
     public String fetchContactInfo() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(buildUrl("contact")))
+                .uri(URI.create(BASE_URL + "/contact"))
                 .GET()
                 .header("Accept", "application/json")
                 .build();

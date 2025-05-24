@@ -6,10 +6,11 @@ import java.util.Scanner;
 import org.json.JSONArray;
 
 public class AdminLandingPageController {
+    private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
 
     public JSONArray getPolls() {
         try {
-            URL url = new URL("http://localhost:8080/api/polls"); // Backend API endpoint
+            URL url = new URL(BASE_URL + "/polls"); // Backend API endpoint
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
@@ -34,7 +35,7 @@ public class AdminLandingPageController {
 
     public boolean deletePoll(String pollId) {
         try {
-            URL url = new URL("http://localhost:8080/api/polls/" + pollId); // Backend API endpoint for deleting a poll
+            URL url = new URL(BASE_URL + "/polls/" + pollId); // Backend API endpoint for deleting a poll
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("DELETE");
             conn.setRequestProperty("Accept", "application/json");

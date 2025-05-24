@@ -11,10 +11,10 @@ import java.util.Scanner;
 
 public class CandidatesController {
 
-    private static final String API_BASE_URL = "https://yourbackend.com/api/candidates";
+    private static final String BASE_URL = "https://192.168.1.10:8080/zvote";
 
     public List<JSONObject> getAllCandidates() {
-        return fetchCandidates(API_BASE_URL);
+        return fetchCandidates(BASE_URL + "/candidates");
     }
 
     public List<JSONObject> filterCandidates(String query) {
@@ -32,7 +32,7 @@ public class CandidatesController {
 
     public boolean deleteCandidate(int candidateId) {
         try {
-            URL url = new URL(API_BASE_URL + "/" + candidateId);
+            URL url = new URL(BASE_URL + "/candidates/" + candidateId);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("DELETE");
 

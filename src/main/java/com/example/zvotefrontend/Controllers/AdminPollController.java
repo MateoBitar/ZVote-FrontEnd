@@ -6,10 +6,11 @@ import java.io.OutputStream;
 import org.json.JSONObject;
 
 public class AdminPollController {
+    private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
 
     public boolean createPoll(JSONObject pollData) {
         try {
-            URL url = new URL("http://localhost:8080/api/polls"); // Backend API endpoint
+            URL url = new URL(BASE_URL + "/polls"); // Backend API endpoint
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Accept", "application/json");

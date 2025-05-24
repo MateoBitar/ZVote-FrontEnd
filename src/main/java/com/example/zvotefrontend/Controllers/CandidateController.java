@@ -9,12 +9,11 @@ import java.net.URL;
 import java.util.stream.Collectors;
 
 public class CandidateController {
-
-    private static final String BACKEND_URL = "https://your-backend-domain.com/api/candidates"; // Adjust backend endpoint
+    private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
 
     public ObservableList<String> getCandidateNames() {
         try {
-            URL url = new URL(BACKEND_URL);
+            URL url = new URL(BASE_URL + "/candidates");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept", "application/json");
