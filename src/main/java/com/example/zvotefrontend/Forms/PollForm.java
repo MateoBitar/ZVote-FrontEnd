@@ -32,7 +32,7 @@ import static com.example.zvotefrontend.Forms.SignInForm.showAlert;
 
 public class PollForm {
 
-    private PollController controller = new PollController();
+    private final PollController controller = new PollController();
     public static Map<String, String> userSession = new HashMap<>();
 
     // Method to display poll details

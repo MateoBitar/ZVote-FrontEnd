@@ -2,10 +2,18 @@ package com.example.zvotefrontend.Controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.stream.Collectors;
 
 public class CandidateController {
@@ -31,4 +39,23 @@ public class CandidateController {
             throw new RuntimeException("Error connecting to API: " + e.getMessage());
         }
     }
+
+    public static void addResult(JSONObject resultData) {
+        HttpClient client = HttpClient.newHttpClient();
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_URL + "/addresult"))
+                    .header("Content-Type", "application/json")
+                    .header("Accept", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(resultData.toString()))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println("Add Result Response: " + response.body());
+        } catch (IOException | InterruptedException e) {
+            System.out.println("Error adding result: " + e.getMessage());
+        }
+    }
+
+
 }
