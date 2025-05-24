@@ -3,8 +3,13 @@ package com.example.zvotefrontend.Controllers;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -40,6 +45,87 @@ public class CandidatesController {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public boolean deleteVotesByCandidate(String candidateId) {
+        try {
+            URL url = new URL(BASE_URL + "/deletevotesbycandidate/" + candidateId); // Backend API endpoint for deleting votes
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("DELETE");
+            conn.setRequestProperty("Accept", "application/json");
+
+            if (conn.getResponseCode() == 200) {
+                return true; // Vote successfully deleted
+            } else {
+                throw new RuntimeException("Failed to delete votes: HTTP Error " + conn.getResponseCode());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting votes: " + e.getMessage());
+        }
+    }
+
+    public List<JSONObject> getCandidateVotes(String candidateId) {
+        List<JSONObject> votesList = new ArrayList<>();
+        HttpClient client = HttpClient.newHttpClient();
+
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_URL + "/getvotesbycandidate/" + candidateId)) // Removed trailing slash just in case
+                    .GET()
+                    .header("Accept", "application/json")
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            String responseBody = response.body();
+
+            if (response.statusCode() == 200 && responseBody.trim().startsWith("[")) {
+                JSONArray votesArray = new JSONArray(responseBody);
+                for (int i = 0; i < votesArray.length(); i++) {
+                    votesList.add(votesArray.getJSONObject(i));
+                }
+            } else {
+                System.out.println("Unexpected response format or status: " + responseBody);
+            }
+
+        } catch (IOException | InterruptedException e) {
+            System.out.println("Error fetching votes: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Unexpected error parsing response: " + e.getMessage());
+        }
+
+        return votesList;
+    }
+
+    public List<JSONObject> getCandidateResults(String candidateId) {
+        List<JSONObject> resultsList = new ArrayList<>();
+        HttpClient client = HttpClient.newHttpClient();
+
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_URL + "/getresultsbycandidate/" + candidateId)) // Removed trailing slash just in case
+                    .GET()
+                    .header("Accept", "application/json")
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            String responseBody = response.body();
+
+            if (response.statusCode() == 200 && responseBody.trim().startsWith("[")) {
+                JSONArray resultsArray = new JSONArray(responseBody);
+                for (int i = 0; i < resultsArray.length(); i++) {
+                    resultsList.add(resultsArray.getJSONObject(i));
+                }
+            } else {
+                System.out.println("Unexpected response format or status: " + responseBody);
+            }
+
+        } catch (IOException | InterruptedException e) {
+            System.out.println("Error fetching results: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Unexpected error parsing response: " + e.getMessage());
+        }
+
+        return resultsList;
     }
 
     private List<JSONObject> fetchCandidates(String apiUrl) {

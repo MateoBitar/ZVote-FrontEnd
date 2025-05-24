@@ -1,6 +1,5 @@
 package com.example.zvotefrontend.Forms;
 
-import com.example.zvotefrontend.Controllers.AdminPollController;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,13 +17,14 @@ import javafx.stage.Stage;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Map;
 
 
 public class AdminPollForm {
 
     private Stage primaryStage;
     // Method to display the "Create Poll" form
-    public void showCreatePoll(Stage primaryStage, UserModel user) throws Exception {
+    public void showCreatePoll(Stage primaryStage, Map<String, String> user) throws Exception {
 
         // Main layout
         BorderPane layout = new BorderPane();

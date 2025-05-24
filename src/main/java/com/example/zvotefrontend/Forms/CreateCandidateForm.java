@@ -1,6 +1,5 @@
 package com.example.zvotefrontend.Forms;
 
-import com.example.zvotefrontend.Controllers.CandidatesController;
 import com.example.zvotefrontend.Controllers.CreateCandidateController;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -17,9 +16,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
-import java.sql.SQLException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;

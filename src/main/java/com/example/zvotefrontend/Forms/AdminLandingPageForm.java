@@ -230,7 +230,7 @@ public class AdminLandingPageForm {
         deletePollGrid.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> searchBar.requestFocus());  // Refocus search bar when grid is clicked
 
 
-        // Fetch all polls from the PollService
+        // Fetch all polls
         List<JSONObject> allPolls = controller.getAllPolls();
 
         populatePollGrid(addPollGrid, allPolls);  // Populate Add tab grid with polls
@@ -480,7 +480,7 @@ public class AdminLandingPageForm {
                 List<JSONObject> results = controller.getPollResults(poll.optString("poll_ID"));
                 if (results != null && !results.isEmpty()) {
                     for (JSONObject result : results) {
-                        controller.deleteResult((String) result.opt("result_ID"));
+                        controller.deleteResult(result.optString("result_ID"));
                     }
                 }
 

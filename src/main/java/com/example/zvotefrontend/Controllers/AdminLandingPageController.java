@@ -77,10 +77,10 @@ public class AdminLandingPageController {
             if (conn.getResponseCode() == 200) {
                 return true; // Vote successfully deleted
             } else {
-                throw new RuntimeException("Failed to delete vote: HTTP Error " + conn.getResponseCode());
+                throw new RuntimeException("Failed to delete votes: HTTP Error " + conn.getResponseCode());
             }
         } catch (Exception e) {
-            throw new RuntimeException("Error deleting vote: " + e.getMessage());
+            throw new RuntimeException("Error deleting votes: " + e.getMessage());
         }
     }
 
