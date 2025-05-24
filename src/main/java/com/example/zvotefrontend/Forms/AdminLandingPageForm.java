@@ -35,13 +35,11 @@ public class AdminLandingPageForm {
     private AdminLandingPageController controller = new AdminLandingPageController();  // API Connection
 
     TabPane tabPane;  // Tab pane for navigating between add and delete operations
-    Stage primaryStage;  // Primary stage for the application
-    Map<String, String> userSession;  // Holds session details for the logged-in user
+    public static Map<String, String> userSession;  // Holds session details for the logged-in user
 
 
     // Method to display the admin landing page
     public void showAdminLandingPage(Stage primaryStage, Map<String, String> userSession) throws Exception {
-        this.primaryStage = primaryStage;
         this.userSession = userSession;
 
         // Main layout

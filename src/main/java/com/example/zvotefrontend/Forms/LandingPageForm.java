@@ -28,15 +28,12 @@ public class LandingPageForm {
 
     private final LandingPageController controller = new LandingPageController();  // API Connection
 
-    Stage primaryStage;  // Reference to the primary stage
-    Map<String, String> userSession;  // Holds session details for the logged-in user
+    public static Map<String, String> userSession;  // Holds session details for the logged-in user
 
 
     // Method to display the landing page
     public void showLandingPage(Stage primaryStage, Map<String, String> userSession) throws Exception {
-        this.primaryStage = primaryStage;
         this.userSession = userSession;
-
 
         // Main layout
         BorderPane layout = new BorderPane();

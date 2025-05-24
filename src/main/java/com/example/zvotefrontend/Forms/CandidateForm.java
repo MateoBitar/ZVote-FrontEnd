@@ -24,7 +24,7 @@ import java.util.*;
 public class CandidateForm {
 
     private final CandidateController controller = new CandidateController();
-    Map<String, String> userSession = new HashMap<>();
+    public static Map<String, String> userSession = new HashMap<>();
 
     // Method to display a list of candidates for a specific poll
     public void displayCandidates(Stage stage, int pollId, Map<String,String> userSession) throws Exception {

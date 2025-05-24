@@ -143,8 +143,7 @@ public class PollForm {
         PieChart pieChart = new PieChart();
         for (JSONObject candidate : candidates) {
             int votes = candidate.optInt("votes", 0);
-            PieChart.Data slice = new PieChart.Data(candidate.optString("name"), controller.getVotePercentage(votes, totalVotes)
-            );
+            PieChart.Data slice = new PieChart.Data(candidate.optString("name"), controller.getVotePercentage(votes, totalVotes));
             pieChart.getData().add(slice);
         }
         pieChart.setLegendVisible(true);
@@ -258,6 +257,7 @@ public class PollForm {
         // Candidates Section
         LandingPageController landingPageController = new LandingPageController();
         List<JSONObject> candidates = landingPageController.getCandidatesWithVotesByPollID(poll.optInt("poll_ID"));
+
         ToggleGroup candidatesGroup = new ToggleGroup();  // Group for RadioButtons to ensure only one is selected
 
 

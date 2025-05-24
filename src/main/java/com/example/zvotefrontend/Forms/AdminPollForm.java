@@ -16,14 +16,12 @@ import org.json.JSONObject;
 import java.util.Map;
 
 public class AdminPollForm {
-    private Stage primaryStage;
     private GridPane pollForm;
     private TextField pollTitleField, pollDescriptionField;
     private DatePicker startDatePicker, endDatePicker;
     private AdminPollController controller;
 
     public void showCreatePoll(Stage primaryStage, Map<String, String> usersession) {
-        this.primaryStage = primaryStage;
         this.controller = new AdminPollController();
 
         BorderPane layout = new BorderPane();

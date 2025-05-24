@@ -20,15 +20,12 @@ import java.util.Map;
 public class CandidatesForm {
 
     private final CandidatesController controller = new CandidatesController();
-    private Stage primaryStage;
     private TabPane tabPane;
     private TextField searchBar;
     private GridPane addCandidateGrid;
     private GridPane deleteCandidateGrid;
 
     public void showCandidatesPage(Stage primaryStage, Map<String, String> usersession) {
-        this.primaryStage = primaryStage;
-
         // Main layout
         BorderPane layout = new BorderPane();
         layout.setStyle("-fx-background-color: #FFFFFF;");
