@@ -14,13 +14,13 @@ public class CandidateController {
     public ObservableList<String> getCandidateNames() {
         try {
             URL url = new URL(BASE_URL + "/candidates");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Accept", "application/json");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
 
-            int responseCode = connection.getResponseCode();
+            int responseCode = conn.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 ObservableList<String> candidateNames = FXCollections.observableArrayList(reader.lines().collect(Collectors.toList()));
                 reader.close();
                 return candidateNames;
