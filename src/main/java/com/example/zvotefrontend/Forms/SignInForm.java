@@ -168,11 +168,14 @@ public class SignInForm {
             try {
                 photoID = (selectedPhoto[0] != null) ? Files.readAllBytes(selectedPhoto[0].toPath()) : new byte[0];
 
+                // Extracting just the numerical part of the country code
+                String numericCode = countryCodeDropdown.getValue().split(" ")[0];
+
                 controller.signUp(SUsernameField.getText(),
                         SEmailField.getText(),
                         SPasswordField.getText(),
                         photoID,
-                        countryCodeDropdown.getValue() + " " + phoneField.getText());
+                        numericCode + " " + phoneField.getText());
 
                 // Clear fields after successful sign-up
                 SUsernameField.clear();
