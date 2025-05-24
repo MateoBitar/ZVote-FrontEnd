@@ -82,7 +82,7 @@ public class LandingPageForm {
         MenuItem userInfoItem = new MenuItem("User Info");
         userInfoItem.setOnAction(e -> {
             UserForm userForm = new UserForm();
-            userForm.showUserProfile(primaryStage, userSession.get("username"));
+            userForm.showUserProfile(primaryStage, userSession);
         });
 
         MenuItem logoutItem = new MenuItem("Log Out");
@@ -361,8 +361,8 @@ public class LandingPageForm {
                 }
 
                 // Navigate to the poll details
-                PollForm pollForm = new PollForm(primaryStage, poll.optInt("poll_id"));
-                pollForm.showPollDetails();
+                PollForm pollForm = new PollForm();
+                pollForm.showPollDetails(primaryStage, poll.optInt("poll_id"), userSession);
             } catch (Exception ex) {
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR, "An error occurred while navigating to poll details.");
                 errorAlert.setContentText(ex.getMessage());

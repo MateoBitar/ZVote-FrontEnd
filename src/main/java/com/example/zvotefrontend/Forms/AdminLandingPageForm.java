@@ -97,7 +97,7 @@ public class AdminLandingPageForm {
         MenuItem userInfoItem = new MenuItem("User Info");
         userInfoItem.setOnAction(e -> {
             UserForm userForm = new UserForm();
-            userForm.showUserProfile(primaryStage, userSession.get("username"));
+            userForm.showUserProfile(primaryStage, userSession);
         });
 
         MenuItem logoutItem = new MenuItem("Log Out");

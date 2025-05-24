@@ -32,8 +32,8 @@ public class UserForm {
     public static Map<String, String> userSession = new HashMap<>();  // Stores session-related data
 
     // Method to display user profile
-    public void showUserProfile(Stage primaryStage, String username) {
-        userSession.put("username", username);  // Add user details to session
+    public void showUserProfile(Stage primaryStage, Map<String, String> userSession) {
+        this.userSession = userSession;  // Add user details to session
 
         // Main layout setup
         BorderPane layout = new BorderPane();
@@ -270,7 +270,7 @@ public class UserForm {
         backButton.setOnAction(event -> {
             ((Stage) backButton.getScene().getWindow()).close();  // Close the update form
             UserForm userForm = new UserForm();
-            userForm.showUserProfile(ownerStage, userSession.get("username"));  // Show user profile
+            userForm.showUserProfile(ownerStage, userSession);  // Show user profile
         });
 
         // Save changes to user information
@@ -296,7 +296,7 @@ public class UserForm {
 
                     ((Stage) submitButton.getScene().getWindow()).close();  // Close update form
                     UserForm userForm = new UserForm();
-                    userForm.showUserProfile(ownerStage, userSession.get("username"));  // Return to user profile
+                    userForm.showUserProfile(ownerStage, userSession);  // Return to user profile
                 }
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
