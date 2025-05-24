@@ -174,26 +174,34 @@ public class SignInForm {
                 // Extracting just the numerical part of the country code
                 String numericCode = countryCodeDropdown.getValue().split(" ")[0];
 
-                controller.signUp(SUsernameField.getText(),
+                // Call signUp and get the response
+                String result = controller.signUp(
+                        SUsernameField.getText(),
                         SEmailField.getText(),
                         SPasswordField.getText(),
                         photoID,
-                        numericCode + " " + phoneField.getText());
+                        numericCode + " " + phoneField.getText()
+                );
 
-                userSession.put("username", SUsernameField.getText());
+                if (result.startsWith("SUCCESS")) {
+                    userSession.put("username", SUsernameField.getText());
 
-                // Clear fields after successful sign-up
-                SUsernameField.clear();
-                SEmailField.clear();
-                SPasswordField.clear();
-                phoneField.clear();
-                countryCodeDropdown.setValue("+961");
-                uploadPhotoButton.setText("Upload Photo ID");
+                    // Clear fields after successful sign-up
+                    SUsernameField.clear();
+                    SEmailField.clear();
+                    SPasswordField.clear();
+                    phoneField.clear();
+                    countryCodeDropdown.setValue("+961");
+                    uploadPhotoButton.setText("Upload Photo ID");
 
-                // Transition to the landing page
-                signInStage.close();
-                LandingPageForm main = new LandingPageForm();
-                main.showLandingPage(primaryStage, userSession);
+                    // Transition to the landing page
+                    signInStage.close();
+                    LandingPageForm main = new LandingPageForm();
+                    main.showLandingPage(primaryStage, userSession);
+                } else {
+                    // Display error alert with message from backend
+                    showAlert(Alert.AlertType.ERROR, "Signup Failed", result);
+                }
 
             } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while processing your request.");

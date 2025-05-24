@@ -36,7 +36,7 @@ public class SignInController {
     }
 
     // POST /zvote/users
-    public void signUp(String username, String email, String password, byte[] photoID, String phone)
+    public String signUp(String username, String email, String password, byte[] photoID, String phone)
             throws IOException, InterruptedException {
 
         HttpClient client = HttpClient.newHttpClient();
@@ -46,10 +46,11 @@ public class SignInController {
 
         JSONObject requestJson = new JSONObject();
         requestJson.put("username", username);
-        requestJson.put("email", email);
-        requestJson.put("password", password);
-        requestJson.put("photoID", encodedPhoto);
-        requestJson.put("phone", phone);
+        requestJson.put("user_email", email);
+        requestJson.put("user_pass", password);
+        requestJson.put("user_photoID", encodedPhoto);
+        requestJson.put("phoneNb", phone);
+        requestJson.put("role", "voter");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/users"))
@@ -59,6 +60,15 @@ public class SignInController {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        response.body();
+        int statusCode = response.statusCode();
+        String responseBody = response.body();
+
+        if (statusCode == 200) {
+            return "SUCCESS: " + responseBody;
+        } else if (statusCode == 400) {
+            return "ERROR: Username already exists";
+        } else {
+            return "ERROR: Server error occurred (" + statusCode + ")";
+        }
     }
 }
