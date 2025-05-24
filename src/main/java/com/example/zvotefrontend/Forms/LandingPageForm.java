@@ -154,19 +154,17 @@ public class LandingPageForm {
 
 
         // Fetch all polls from the PollService
-        PollService pollService = new PollService();
-        List<PollModel> allPolls = pollService.getAllPolls();
+        List<JSONObject> allPolls = controller.getAllPolls();
         populatePollGrid(pollGrid, allPolls);  // Populate the grid with polls
 
 
         // Filter polls dynamically based on search input
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
             try {
-                PollService pollServiceForFilter = new PollService();
-                List<PollModel> allPollsForFilter = pollServiceForFilter.getAllPolls();
+                List<JSONObject> allPollsForFilter = controller.getAllPolls();
 
                 // Apply the search query filter
-                List<PollModel> filteredPolls = filterPolls(allPollsForFilter, newValue);
+                List<JSONObject> filteredPolls = filterPolls(allPollsForFilter, newValue);
                 populatePollGrid(pollGrid, filteredPolls);
 
             } catch (Exception e) {
@@ -211,7 +209,7 @@ public class LandingPageForm {
     }
 
     // Method to filter polls based on a search query
-    private List<PollModel> filterPolls(List<PollModel> allPolls, String query) {
+    private List<JSONObject> filterPolls(List<JSONObject> allPolls, String query) {
         return allPolls.stream()  // Stream through all polls
                 .filter(poll -> poll.getTitle().toLowerCase().contains(query.toLowerCase()) ||
                         poll.getDescription().toLowerCase().contains(query.toLowerCase()))  // Match title or description
@@ -219,11 +217,11 @@ public class LandingPageForm {
     }
 
     // Method to populate the poll grid with polls
-    private void populatePollGrid(GridPane pollGrid, List<PollModel> polls) throws Exception {
+    private void populatePollGrid(GridPane pollGrid, List<JSONObject> polls) throws Exception {
         pollGrid.getChildren().clear();  // Clear existing content in the grid
 
         // Loop through the polls and add poll cards to the grid
-        for (PollModel poll : polls) {
+        for (JSONObject poll : polls) {
             VBox pollCard = createPollCard(poll);  // Create a poll card using the reusable method
             pollGrid.add(
                     pollCard,
@@ -236,7 +234,7 @@ public class LandingPageForm {
     }
 
     // Method to create a reusable poll card
-    private VBox createPollCard(PollModel poll) throws Exception {
+    private VBox createPollCard(JSONObject poll) throws Exception {
         VBox pollCard = new VBox();
         pollCard.setAlignment(Pos.TOP_CENTER);
         pollCard.setPadding(new Insets(10));
