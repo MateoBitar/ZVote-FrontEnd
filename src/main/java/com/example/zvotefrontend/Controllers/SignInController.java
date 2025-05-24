@@ -36,7 +36,7 @@ public class SignInController {
     }
 
     // POST /zvote/users
-    public String signUp(String username, String email, String password, byte[] photoID, String phone)
+    public void signUp(String username, String email, String password, byte[] photoID, String phone)
             throws IOException, InterruptedException {
 
         HttpClient client = HttpClient.newHttpClient();
@@ -59,6 +59,6 @@ public class SignInController {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return response.body();
+        response.body();
     }
 }
