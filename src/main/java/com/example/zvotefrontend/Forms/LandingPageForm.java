@@ -19,7 +19,7 @@ public class LandingPageForm {
 
     private final LandingPageController controller = new LandingPageController();  // API Connection
 
-    public Scene createLandingScene(Stage primaryStage) {
+    public Scene showLandingPage(Stage primaryStage) {
         BorderPane layout = new BorderPane();
         layout.setStyle("-fx-background-color: #FFFFFF");
 

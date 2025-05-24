@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class CandidatesController {
 
-    private static final String BASE_URL = "https://192.168.1.10:8080/zvote";
+    private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
 
     public List<JSONObject> getAllCandidates() {
         return fetchCandidates(BASE_URL + "/candidates");

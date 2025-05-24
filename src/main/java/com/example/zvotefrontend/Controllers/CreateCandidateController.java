@@ -5,6 +5,8 @@ import java.net.URL;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.io.File;
+import java.util.Base64;
+
 import org.json.JSONObject;
 
 public class CreateCandidateController {
@@ -21,7 +23,7 @@ public class CreateCandidateController {
 
             // Convert photo file to byte array and add to JSON
             byte[] photoBytes = photoFile != null ? Files.readAllBytes(photoFile.toPath()) : new byte[0];
-            candidateData.put("photo", photoBytes);
+            candidateData.put("photo", Base64.getEncoder().encodeToString(photoBytes));
 
             OutputStream os = conn.getOutputStream();
             os.write(candidateData.toString().getBytes());

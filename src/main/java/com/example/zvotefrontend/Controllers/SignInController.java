@@ -11,7 +11,7 @@ public class SignInController {
     private static final String BASE_URL = "http://192.168.1.10:8080/zvote";
 
     // POST /zvote/login
-    public String login(String username, String password) throws IOException, InterruptedException {
+    public boolean login(String username, String password) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
 
         String loginUrl = BASE_URL + "/login?username=" + username + "&password=" + password;
@@ -23,15 +23,21 @@ public class SignInController {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return response.body();
+
+        // Check response status code (e.g., 200 means OK/success)
+        if (response.statusCode() == 200 && response.body().equalsIgnoreCase("Login successful")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // POST /zvote/users
-    public String signUp(String username, String email, String password, String phone) throws IOException, InterruptedException {
+    public String signUp(String username, String email, String password, byte[] photoID, String phone) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         String requestBody = String.format(
-                "{\"username\": \"%s\", \"email\": \"%s\", \"password\": \"%s\", \"phone\": \"%s\"}",
-                username, email, password, phone
+                "{\"username\": \"%s\", \"email\": \"%s\", \"password\": \"%s\", \"photoID\": \" \", \"phone\": \"%s\"}",
+                username, email, password, photoID, phone
         );
 
         HttpRequest request = HttpRequest.newBuilder()
