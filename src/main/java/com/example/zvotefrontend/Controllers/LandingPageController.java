@@ -20,20 +20,27 @@ public class LandingPageController {
 
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/polls/"))
+                    .uri(URI.create(BASE_URL + "/polls")) // Removed trailing slash just in case
                     .GET()
                     .header("Accept", "application/json")
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            String responseBody = response.body();
 
-            JSONArray pollsArray = new JSONArray(response.body());
-            for (int i = 0; i < pollsArray.length(); i++) {
-                pollsList.add(pollsArray.getJSONObject(i));
+            if (response.statusCode() == 200 && responseBody.trim().startsWith("[")) {
+                JSONArray pollsArray = new JSONArray(responseBody);
+                for (int i = 0; i < pollsArray.length(); i++) {
+                    pollsList.add(pollsArray.getJSONObject(i));
+                }
+            } else {
+                System.out.println("Unexpected response format or status: " + responseBody);
             }
 
         } catch (IOException | InterruptedException e) {
             System.out.println("Error fetching polls: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Unexpected error parsing response: " + e.getMessage());
         }
 
         return pollsList;
