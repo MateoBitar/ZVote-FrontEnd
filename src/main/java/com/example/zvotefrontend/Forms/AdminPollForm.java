@@ -165,9 +165,9 @@ public class AdminPollForm {
             JSONObject newPoll = new JSONObject();
             newPoll.put("title", pollTitleField.getText());
             newPoll.put("description", pollDescriptionField.getText());
-            newPoll.put("start_date", Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime());
-            newPoll.put("end_date", Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime());
-            newPoll.put("admin_ID", UserController.getUserByUsername(userSession.get("username")).optInt("admin_ID"));
+            newPoll.put("start_date", startDate.toString()); // "YYYY-MM-DD"
+            newPoll.put("end_date", endDate.toString());
+            newPoll.put("admin_ID", UserController.getUserByUsername(userSession.get("username")).optInt("user_ID"));
 
             try {
                 controller.createPoll(newPoll);

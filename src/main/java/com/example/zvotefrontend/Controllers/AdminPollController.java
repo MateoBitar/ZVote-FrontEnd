@@ -8,7 +8,7 @@ import org.json.JSONObject;
 public class AdminPollController {
     private static final String BASE_URL = "http://192.168.1.4:8080/zvote";
 
-    public boolean createPoll(JSONObject pollData) {
+    public void createPoll(JSONObject pollData) {
         try {
             URL url = new URL(BASE_URL + "/polls"); // Backend API endpoint
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -22,12 +22,10 @@ public class AdminPollController {
             os.flush();
             os.close();
 
-            if (conn.getResponseCode() == 201) {
+            if (conn.getResponseCode() == 200) {
                 conn.disconnect();
-                return true;
             } else {
                 conn.disconnect();
-                return false;
             }
         } catch (Exception e) {
             throw new RuntimeException("Error creating poll: " + e.getMessage());
