@@ -133,13 +133,13 @@ public class AdminPollDetailsForm {
 
         // Calculate total votes
         int totalVotes = candidates.stream()
-                .mapToInt(c -> c.optInt("votes", 0))
+                .mapToInt(c -> c.optInt("voteCount", 0))
                 .sum();
 
         PieChart pieChart = new PieChart();
         for (JSONObject candidate : candidates) {
-            int votes = candidate.optInt("votes", 0);
-            PieChart.Data slice = new PieChart.Data(candidate.optString("name"), new PollController().getVotePercentage(votes, totalVotes));
+            int votes = candidate.optInt("voteCount", 0);
+            PieChart.Data slice = new PieChart.Data(candidate.optString("name"), (double) votes * 100 / totalVotes);
             pieChart.getData().add(slice);
         }
         pieChart.setLegendVisible(true);
@@ -148,12 +148,20 @@ public class AdminPollDetailsForm {
         pieChart.setPrefHeight(400);
 
 
-        // Winner Display if Poll is Completed
-        Label winnerLabel = null;
-        if (daysLeft < 0) {
-            winnerLabel = new Label("Winner: " + new PollController().getWinnerByPoll_ID(poll_ID).optString("name"));
-            winnerLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: Black;");
-            pollInfoSection.getChildren().add(winnerLabel);
+        if(totalVotes != 0) {
+            // Winner Display if Poll is Completed
+            Label winnerLabel = null;
+            if (daysLeft < 0) {
+                winnerLabel = new Label("Winner: " + new PollController().getWinnerByPoll_ID(poll_ID).optString("name"));
+                winnerLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: Black;");
+                pollInfoSection.getChildren().add(winnerLabel);
+            }
+        } else {
+            Label noWinnerLabel = new Label("Winner: No winner");
+            if (daysLeft < 0) {
+                noWinnerLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: Black;");
+                pollInfoSection.getChildren().add(noWinnerLabel);
+            }
         }
 
         pollInfoSection.getChildren().addAll(pollTitleLabel, pollDescriptionLabel, statusLabel, chartTitle, space, pieChart);

@@ -137,13 +137,13 @@ public class PollForm {
 
         // Calculate total votes
         int totalVotes = candidates.stream()
-                .mapToInt(c -> c.optInt("votes", 0))
+                .mapToInt(c -> c.optInt("voteCount", 0))
                 .sum();
 
         PieChart pieChart = new PieChart();
         for (JSONObject candidate : candidates) {
-            int votes = candidate.optInt("votes", 0);
-            PieChart.Data slice = new PieChart.Data(candidate.optString("name"), controller.getVotePercentage(votes, totalVotes));
+            int votes = candidate.optInt("voteCount", 0);
+            PieChart.Data slice = new PieChart.Data(candidate.optString("name"), (double) votes * 100 / totalVotes);
             pieChart.getData().add(slice);
         }
         pieChart.setLegendVisible(true);
@@ -152,11 +152,21 @@ public class PollForm {
         pieChart.setPrefHeight(400);
 
 
-        // Display Winner if Poll is Completed
-        Label winnerLabel = null;
-        if (daysLeft < 0) {
-            winnerLabel = new Label("Winner: " + controller.getWinnerByPoll_ID(poll_ID).optString("name"));
-            winnerLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: Black;");
+        Label resultLabel = null;
+        if(totalVotes != 0) {
+            // Display Winner if Poll is Completed
+            Label winnerLabel = null;
+            if (daysLeft < 0) {
+                winnerLabel = new Label("Winner: " + controller.getWinnerByPoll_ID(poll_ID).optString("name"));
+                winnerLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: Black;");
+                resultLabel = winnerLabel;
+            }
+        } else {
+            Label noWinnerLabel = new Label("Winner: No winner");
+            if (daysLeft < 0) {
+                noWinnerLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: Black;");
+                resultLabel = noWinnerLabel;
+            }
         }
 
 
@@ -189,7 +199,7 @@ public class PollForm {
                 pollInfoSection.getChildren().add(votedLabel);
             }
         } else {
-            pollInfoSection.getChildren().add(winnerLabel);
+            pollInfoSection.getChildren().add(resultLabel);
         }
 
         layout.setCenter(pollInfoSection);
