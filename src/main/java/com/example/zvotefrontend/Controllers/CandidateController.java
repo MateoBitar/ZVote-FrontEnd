@@ -51,7 +51,11 @@ public class CandidateController {
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println("Add Result Response: " + response.body());
+
+            if (response.statusCode() != 200) {
+                System.out.println("Failed to add result. Server responded with: " + response.body());
+            }
+
         } catch (IOException | InterruptedException e) {
             System.out.println("Error adding result: " + e.getMessage());
         }

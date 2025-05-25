@@ -40,7 +40,11 @@ public class PollController {
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println("Vote Response: " + response.body());
+
+            if (response.statusCode() != 200) {
+                System.out.println("Failed to add result. Server responded with: " + response.body());
+            }
+
         } catch (IOException | InterruptedException e) {
             System.out.println("Error submitting vote: " + e.getMessage());
         }
@@ -157,9 +161,7 @@ public class PollController {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() == 200) {
-                System.out.println("Result updated successfully.");
-            } else {
+            if (response.statusCode() != 200) {
                 System.out.println("Failed to update result. Server responded with: " + response.body());
             }
 
