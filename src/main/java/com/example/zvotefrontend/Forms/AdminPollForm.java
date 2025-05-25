@@ -1,6 +1,7 @@
 package com.example.zvotefrontend.Forms;
 
 import com.example.zvotefrontend.Controllers.AdminPollController;
+import com.example.zvotefrontend.Controllers.PollController;
 import com.example.zvotefrontend.Controllers.UserController;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -173,8 +174,8 @@ public class AdminPollForm {
             newPoll.put("admin_ID", UserController.getUserByUsername(userSession.get("username")).optInt("user_ID"));
 
             try {
-                controller.createPoll(newPoll);
-                new CandidateForm().displayCandidates(primaryStage, newPoll.optInt("poll_ID"), userSession);
+                JSONObject newP = controller.createPoll(newPoll);
+                new CandidateForm().displayCandidates(primaryStage, newP.optInt("poll_ID"), userSession);
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText("Title Unavailable");

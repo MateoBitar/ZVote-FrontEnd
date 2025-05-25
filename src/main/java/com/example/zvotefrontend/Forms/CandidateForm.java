@@ -2,6 +2,7 @@ package com.example.zvotefrontend.Forms;
 
 import com.example.zvotefrontend.Controllers.CandidateController;
 import com.example.zvotefrontend.Controllers.CandidatesController;
+import com.example.zvotefrontend.Controllers.PollController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -97,20 +98,27 @@ public class CandidateForm {
         Button submitButton = new Button("Submit");
         submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;" +
                 "-fx-cursor: hand");
+
         submitButton.setOnAction(event -> {
             for (JSONObject candidate : candidates) {
                 CheckBox checkBox = checkBoxMap.get(candidate);
                 if (checkBox != null && checkBox.isSelected()) {
                     try {
-                        // Construct the JSON object for the result
                         JSONObject resultData = new JSONObject();
-                        resultData.put("registration_date", new Date().toInstant().toString()); // ISO format
+                        resultData.put("registration_date", java.time.LocalDate.now().toString());
                         resultData.put("votes_casted", 0);
-                        resultData.put("withdrawal_date", "");
-                        resultData.put("candidate_ID", candidate.optInt("candidate_ID"));
-                        resultData.put("poll_ID", pollId);
+                        resultData.put("withdrawal_date", JSONObject.NULL);
 
-                        // Send to backend
+                        // Wrap poll_ID in a nested object
+                        JSONObject pollObject = new JSONObject();
+                        pollObject.put("poll_ID", pollId);
+                        resultData.put("poll", pollObject);
+
+                        // Wrap candidate_ID in a nested object
+                        JSONObject candidateObject = new JSONObject();
+                        candidateObject.put("candidate_ID", candidate.optInt("candidate_ID"));
+                        resultData.put("candidate", candidateObject);
+
                         CandidateController.addResult(resultData);
                     } catch (Exception e) {
                         System.out.println("Error submitting result: " + e.getMessage());
