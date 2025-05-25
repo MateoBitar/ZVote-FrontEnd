@@ -276,6 +276,7 @@ public class PollForm {
         Button submitButton = new Button("Submit Vote");
         submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;" +
                 " -fx-cursor: hand");
+
         submitButton.setOnAction(event -> {
             RadioButton selectedCandidate = (RadioButton) candidatesGroup.getSelectedToggle();
 
@@ -283,14 +284,21 @@ public class PollForm {
                 try {
                     JSONObject abstainVote = new JSONObject();
 
-                    abstainVote.put("user_ID", UserController.getUserByUsername(userSession.get("user_ID")).optInt("user_ID"));
-                    abstainVote.put("poll_ID", poll.optInt("poll_ID"));
+                    // Nested user object
+                    JSONObject userObj = new JSONObject();
+                    userObj.put("user_ID", UserController.getUserByUsername(userSession.get("username")).optInt("user_ID"));
+                    abstainVote.put("user", userObj);
 
-                    // Set current timestamp
+                    // Nested poll object
+                    JSONObject pollObj = new JSONObject();
+                    pollObj.put("poll_ID", poll.optInt("poll_ID"));
+                    abstainVote.put("poll", pollObj);
+
+                    // Abstention → candidate is null
+                    abstainVote.put("candidate", JSONObject.NULL);
+
                     abstainVote.put("timestamp", Instant.now().toString());
-
-                    // Set candidate_ID to JSONObject.NULL to serialize it as null in JSON
-                    abstainVote.put("candidate_ID", JSONObject.NULL);
+                    abstainVote.put("blank", true);
 
                     PollController.addVote(abstainVote);
 
@@ -315,16 +323,28 @@ public class PollForm {
                     int candidateId = (int) selectedCandidate.getUserData();
                     int voterId = UserController.getUserByUsername(userSession.get("username")).optInt("user_ID");
 
-                    JSONObject Vote = new JSONObject();
-                    Vote.put("user_ID", voterId);
-                    Vote.put("poll_ID", pollId);
+                    // Build nested JSON
+                    JSONObject vote = new JSONObject();
 
-                    // Set current timestamp
-                    Vote.put("timestamp", Instant.now().toString());
+                    // user object
+                    JSONObject userObj = new JSONObject();
+                    userObj.put("user_ID", voterId);
+                    vote.put("user", userObj);
 
-                    Vote.put("candidate_ID", candidateId);
+                    // poll object
+                    JSONObject pollObj = new JSONObject();
+                    pollObj.put("poll_ID", pollId);
+                    vote.put("poll", pollObj);
 
-                    PollController.addVote(Vote);
+                    // candidate object
+                    JSONObject candidateObj = new JSONObject();
+                    candidateObj.put("candidate_ID", candidateId);
+                    vote.put("candidate", candidateObj);
+
+                    vote.put("timestamp", Instant.now().toString());
+                    vote.put("blank", false); // Since a candidate is selected, this is not an abstention
+
+                    PollController.addVote(vote);
 
                     JSONObject result = controller.getResultByPollAndCandidate(pollId, candidateId);
 
