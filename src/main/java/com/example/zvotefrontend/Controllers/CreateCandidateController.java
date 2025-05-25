@@ -26,7 +26,7 @@ public class CreateCandidateController {
             os.flush();
             os.close();
 
-            if (conn.getResponseCode() == 201) {
+            if (conn.getResponseCode() == 200) {
                 conn.disconnect();
                 return true;
             } else {

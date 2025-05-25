@@ -400,7 +400,7 @@ public class AdminLandingPageForm {
         candidatesBox.getChildren().add(candidatesLabel);
 
         LandingPageController landingPageController = new LandingPageController();
-        List<JSONObject> candidates = landingPageController.getCandidatesWithVotesByPollID(poll.optInt("poll_id"));
+        List<JSONObject> candidates = landingPageController.getCandidatesWithVotesByPollID(poll.optInt("poll_ID"));
 
 
         for (JSONObject candidate : candidates) {

@@ -360,7 +360,7 @@ public class LandingPageForm {
 
                 // Navigate to the poll details
                 PollForm pollForm = new PollForm();
-                pollForm.showPollDetails(primaryStage, poll.optInt("poll_id"), userSession);
+                pollForm.showPollDetails(primaryStage, poll.optInt("poll_ID"), userSession);
             } catch (Exception ex) {
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR, "An error occurred while navigating to poll details.");
                 errorAlert.setContentText(ex.getMessage());
