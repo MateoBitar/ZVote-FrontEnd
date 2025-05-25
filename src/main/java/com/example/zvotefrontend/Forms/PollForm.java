@@ -185,7 +185,6 @@ public class PollForm {
         pollInfoSection.getChildren().addAll(pollTitleLabel, pollDescriptionLabel, statusLabel, chartTitle, space, pieChart);
 
         boolean hasVoted = controller.hasUserVoted(UserController.getUserByUsername(userSession.get("username")).optInt("user_ID"), poll_ID);
-
         if (today.isBefore(startLocalDate)) {
             Label inactiveLabel = new Label("Voting Starts On • " + startLocalDate);
             inactiveLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: Black;");

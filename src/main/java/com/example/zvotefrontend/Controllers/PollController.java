@@ -97,11 +97,10 @@ public class PollController {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(BASE_URL + "/hasuservoted/" + userId + "/" + pollId))
                     .GET()
-                    .header("Accept", "text/plain")
+                    .header("Accept", "application/json")
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
             return Boolean.parseBoolean(response.body());
 
         } catch (Exception e) {
