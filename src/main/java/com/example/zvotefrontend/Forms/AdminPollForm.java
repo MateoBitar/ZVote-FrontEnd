@@ -167,6 +167,9 @@ public class AdminPollForm {
             newPoll.put("description", pollDescriptionField.getText());
             newPoll.put("start_date", startDate.toString()); // "YYYY-MM-DD"
             newPoll.put("end_date", endDate.toString());
+            newPoll.put("status", "inactive");
+            newPoll.put("nbOfVotes", 0);
+            newPoll.put("nbOfAbstentions", 0);
             newPoll.put("admin_ID", UserController.getUserByUsername(userSession.get("username")).optInt("user_ID"));
 
             try {

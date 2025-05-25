@@ -104,9 +104,11 @@ public class CandidateForm {
                     try {
                         // Construct the JSON object for the result
                         JSONObject resultData = new JSONObject();
-                        resultData.put("resultDate", new Date().toInstant().toString()); // ISO format
-                        resultData.put("candidateId", candidate.optInt("candidate_ID"));
-                        resultData.put("pollId", pollId);
+                        resultData.put("registration_date", new Date().toInstant().toString()); // ISO format
+                        resultData.put("votes_casted", 0);
+                        resultData.put("withdrawal_date", "");
+                        resultData.put("candidate_ID", candidate.optInt("candidate_ID"));
+                        resultData.put("poll_ID", pollId);
 
                         // Send to backend
                         CandidateController.addResult(resultData);
