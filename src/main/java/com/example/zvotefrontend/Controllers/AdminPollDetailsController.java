@@ -3,10 +3,13 @@ package com.example.zvotefrontend.Controllers;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
+
+import io.github.cdimascio.dotenv.Dotenv;
 import org.json.JSONObject;
 
 public class AdminPollDetailsController {
-    private static final String BASE_URL = "http://192.168.1.4:8080/zvote";
+    private static final Dotenv dotenv = Dotenv.load();
+    private static final String BASE_URL = dotenv.get("ZVOTE_BASE_URL");
 
     public JSONObject getPollDetails(String pollId) {
         try {

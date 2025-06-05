@@ -4,6 +4,7 @@ module com.example.zvotefrontend {
     requires java.net.http;
     requires java.sql;
     requires org.json;
+    requires dotenv.java;
 
 
     opens com.example.zvotefrontend to javafx.fxml;

@@ -1,5 +1,6 @@
 package com.example.zvotefrontend.Controllers;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -10,8 +11,8 @@ import java.net.http.HttpResponse;
 import java.util.Base64;
 
 public class SignInController {
-
-    private static final String BASE_URL = "http://192.168.1.4:8080/zvote";
+    private static final Dotenv dotenv = Dotenv.load();
+    private static final String BASE_URL = dotenv.get("ZVOTE_BASE_URL");
 
     // POST /zvote/login
     public boolean login(String username, String password) throws IOException, InterruptedException {

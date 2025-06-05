@@ -7,10 +7,12 @@ import java.nio.file.Files;
 import java.io.File;
 import java.util.Base64;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.json.JSONObject;
 
 public class CreateCandidateController {
-    private static final String BASE_URL = "http://192.168.1.4:8080/zvote";
+    private static final Dotenv dotenv = Dotenv.load();
+    private static final String BASE_URL = dotenv.get("ZVOTE_BASE_URL");
 
     public boolean createCandidate(JSONObject candidateData) {
         try {

@@ -1,5 +1,6 @@
 package com.example.zvotefrontend.Controllers;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URI;
@@ -8,7 +9,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class PollController {
-    private static final String BASE_URL = "http://192.168.1.4:8080/zvote";
+    private static final Dotenv dotenv = Dotenv.load();
+    private static final String BASE_URL = dotenv.get("ZVOTE_BASE_URL");
 
     // GET /zvote/polls/{poll_ID}
     public static JSONObject getPollByPoll_ID(int pollId) {

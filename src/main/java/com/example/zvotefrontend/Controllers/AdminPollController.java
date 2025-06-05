@@ -6,10 +6,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.OutputStream;
+
+import io.github.cdimascio.dotenv.Dotenv;
 import org.json.JSONObject;
 
 public class AdminPollController {
-    private static final String BASE_URL = "http://192.168.1.4:8080/zvote";
+    private static final Dotenv dotenv = Dotenv.load();
+    private static final String BASE_URL = dotenv.get("ZVOTE_BASE_URL");
 
     public JSONObject createPoll(JSONObject pollData) {
         try {

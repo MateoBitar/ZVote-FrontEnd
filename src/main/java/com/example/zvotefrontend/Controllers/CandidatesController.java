@@ -1,5 +1,6 @@
 package com.example.zvotefrontend.Controllers;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -15,8 +16,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class CandidatesController {
-
-    private static final String BASE_URL = "http://192.168.1.4:8080/zvote";
+    private static final Dotenv dotenv = Dotenv.load();
+    private static final String BASE_URL = dotenv.get("ZVOTE_BASE_URL");
 
     public List<JSONObject> getAllCandidates() {
         return fetchCandidates(BASE_URL + "/candidates");
